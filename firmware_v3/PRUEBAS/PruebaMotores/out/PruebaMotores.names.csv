@@ -1,0 +1,242 @@
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0019cc 000000c8 t uartProcessIRQ
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:100000ec 00000004 b rxIsrCallbackUART0
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:100000f0 00000004 b rxIsrCallbackUART0Params
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:100000f4 00000004 b rxIsrCallbackUART2
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:100000f8 00000004 b rxIsrCallbackUART2Params
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:100000fc 00000004 b rxIsrCallbackUART3
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:10000100 00000004 b rxIsrCallbackUART3Params
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:10000104 00000004 b txIsrCallbackUART0
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:10000108 00000004 b txIsrCallbackUART0Params
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1000010c 00000004 b txIsrCallbackUART2
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:10000110 00000004 b txIsrCallbackUART2Params
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:10000114 00000004 b txIsrCallbackUART3
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:10000118 00000004 b txIsrCallbackUART3Params
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0024b8 00000048 t lpcUarts
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a002228 00000004 t InitClkStates
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a00222c 00000074 t pinmuxing
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a00074c 00000044 t Board_LED_Init
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000790 00000040 t Board_TEC_Init
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0007d0 00000040 t Board_GPIO_Init
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000810 00000030 t Board_ADC_Init
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000840 00000038 t Board_SPI_Init
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000878 00000024 t Board_I2C_Init
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0022a4 00000008 t GpioButtons
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0022ac 0000000c t GpioLeds
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0022b8 00000012 t GpioPorts
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0008f8 00000014 t Chip_SSP_GetClockIndex
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a00090c 00000018 t Chip_SSP_GetPeriphClockIndex
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:10000000 00000038 d i2c
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0022d0 00000048 t InitClkStates
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000b84 0000002c t Chip_TIMER_GetClockIndex
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000bd4 00000014 t Chip_ADC_GetClockIndex
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000be8 00000032 t getClkDiv
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000cb0 000000a0 t pll_calc_divs
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000d50 0000010c t pll_get_frac
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000e5c 0000004c t Chip_Clock_FindBaseClock
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0010d0 00000022 t Chip_Clock_GetDivRate
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:100000d0 00000008 b audio_usb_pll_freq
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a002324 0000006c t periph_to_base
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a00123c 0000002c t Chip_UART_GetIndex
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a002390 00000008 t UART_BClock
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a002398 00000008 t UART_PClock
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:10000038 00000004 d ClockSpeed
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0013ec 00000034 t gpioObtainPinInit
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001636 00000002 t errorOcurred
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001638 00000002 t doNothing
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1000003c 00000040 d timer_dd
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a002488 00000030 t timer_sd
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:100000d8 00000004 b callBackFuncParams
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:100000e0 00000008 b tickCounter
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:100000e8 00000004 b tickHookFunction
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1000011c 00000004 b g_hUsb
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:10000088 00000048 d AttachedServoList
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a002500 00000009 t servoMap
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a002510 t __init_array_end
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a00250c b __preinit_array_end
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a00250c t __init_array_start
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a00250c b __preinit_array_start
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000ef4 0000001c T Chip_Clock_GetDividerSource
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001878 00000044 T TIMER2_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000184 00000002 W DebugMon_Handler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W RIT_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a080000 A __top_MFlashA512
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W ADCHS_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000300 00000034 T MotorInit
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000114 T __section_table_start
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W FLASH_EEPROM_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W I2C0_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0008f0 00000008 T __stdio_init
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a00017a 00000002 W HardFault_Handler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000000 A __vectors_start__
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000c8e 0000000c T Chip_ADC_SetResolution
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001e88 0000001c T servoRead
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0019a0 0000002c T SysTick_Handler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001e64 00000024 T servoInit
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a00060e 00000002 W initialise_monitor_handles
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W SDIO_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001be0 0000001c T timer2CompareMatch2func
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W ATIMER_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000186 00000002 W PendSV_Handler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000178 00000002 W NMI_Handler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a002518 R __exidx_end
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000150 T __data_section_table_end
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W I2C1_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W UART1_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W GPIO5_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W CAN1_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:53ff727e A __valid_user_code_checksum
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a002518 R _etext
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W USB1_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W I2S0_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0018bc 00000044 T TIMER3_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001172 0000000c T Chip_Clock_GetBaseClocktHz
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001ddc 00000058 T servoAttach
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001bc 0000000a T UART0_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001a8 00000012 T bss_init
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000bbc 00000018 T Chip_TIMER_Reset
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W SGPIO_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001ecc T __aeabi_uldivmod
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:10000128 ? _noinit
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:10000120 00000004 B SystemCoreClock
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001268 00000054 T Chip_UART_Init
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W ADC0_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000180 00000002 W UsageFault_Handler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0011f0 0000004c T Chip_Clock_GetRate
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W GPIO6_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001c50 0000001c T timer3CompareMatch3func
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0006d4 0000006c T Board_SetupClocking
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:20008000 A __top_RamAHB32
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001e34 00000030 T servoDetach
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001efc 000002d0 T __udivmoddi4
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0022a0 00000004 T ExtRateIn
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W IntDefaultHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001b70 0000001c T timer1CompareMatch1func
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000300 T __CRP_WORD_END__
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W GPIO1_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W SSP0_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a002510 R __exidx_start
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0002fc 00000004 T CRP_WORD
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0021d0 00000048 T __libc_init_array
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W ADC1_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0008c0 00000030 T Board_Init
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a00069a 00000002 W _init
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000114 T __data_section_table
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001ba8 0000001c T timer1CompareMatch3func
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001db4 00000028 T servoIsAttached
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W RTC_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:10000128 B _ebss
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0017f8 00000040 T TIMER0_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000610 00000088 T Reset_Handler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001924 0000007c T tickInit
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:20010000 A __top_RamAHB_ETB16
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W SPI_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001bc4 0000001c T timer2CompareMatch1func
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0009f0 00000038 T Chip_I2C_SetClockRate
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W LCD_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a00044a 00000076 T TwoMotorRun
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000ea8 0000004c T Chip_Clock_EnableCrystal
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:10008000 A __top_RamLoc32
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a00018a 0000001e T data_init
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001838 00000040 T TIMER1_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0009cc 00000024 T Chip_I2C_Init
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0003f8 00000052 T MotorRun
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001a94 0000000a T UART2_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001064 0000006c T Chip_Clock_GetMainPLLHz
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0023a0 000000e6 T gpioPinsInit
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000924 00000012 T Chip_SSP_SetClockRate
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W GPIO2_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a00163c 00000120 T Timer_Init
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a00175c 00000008 T Timer_microsecondsToTicks
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a00114c 00000026 T Chip_Clock_GetBaseClock
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001d6c 00000048 T servoInitTimers
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:100000d0 B _bss
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000c5c 00000032 T Chip_ADC_SetSampleRate
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W I2S1_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000936 0000003e T Chip_SSP_SetBitRate
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000b80 00000002 T Chip_GPIO_Init
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0022cc 00000004 T OscRateIn
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001c88 0000004c T timer1CompareMatch0func
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:10000128 ? _end_noinit
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:10008000 A _vStackTop
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W SSP1_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000bb0 0000000c T Chip_TIMER_Init
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000178 T __bss_section_table_end
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001420 000001ac T gpioInit
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a00037e 0000007a T TwoMotorStep
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0021cc 00000002 W __aeabi_ldiv0
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001aa8 0000001c T USB0_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W GPIO3_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a00179c 00000044 T Timer_DisableCompareMatch
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W SCT_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000f10 0000001c T Chip_Clock_GetDividerDivisor
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0002fc T __CRP_WORD_START__
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a002218 00000010 T memset
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a00017c 00000002 W MemManage_Handler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0004c0 0000014e T main
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W WDT_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:2000c000 A __top_RamAHB16
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1008a000 A __top_RamLoc40
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000182 00000002 W SVC_Handler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001764 00000038 T Timer_EnableCompareMatch
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W GPIO7_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001180 0000003c T Chip_Clock_EnableOpts
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000334 0000004a T MotorStep
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001ea4 00000028 T servoWrite
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000f2c 000000b8 T Chip_Clock_GetClockInputHz
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000fe4 00000080 T Chip_Clock_CalcMainPLLValue
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001398 00000038 T SystemInit
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W SPIFI_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001b38 00000038 T delay
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W QEI_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000150 T __bss_section_table
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0015cc 0000006a T gpioWrite
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000698 00000002 W _fini
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000c1c 00000040 T Chip_ADC_Init
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:10000124 00000004 B g_pUsbApi
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a00069c 00000038 T Board_SetupMuxing
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0012bc 000000dc T Chip_UART_SetBaudFDR
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001900 0000000c T tickRead
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:10000080 00000008 D tickRateMS
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001c34 0000001c T timer3CompareMatch2func
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W ETH_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:10000000 ? _end_uninit_RESERVED
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1b000000 T __core_m0app_START__
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001c6c 0000001c T valueToMicroseconds
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W CAN0_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:10000000 D _data
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:10000128 B _pvHeapStart
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000178 T __section_table_end
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000974 00000038 T Chip_SSP_Init
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W GINT0_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W DAC_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a00089c 00000024 T Board_Debug_Init
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:100000d0 D _edata
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001bfc 0000001c T timer2CompareMatch3func
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0009ac 00000020 T Chip_I2C_EventHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W M0SUB_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000a28 00000158 T Chip_SetupCoreClock
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W GPIO0_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000000 00000040 T g_pfnVectors
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000c9c 00000014 T SystemCoreClockUpdate
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001c18 0000001c T timer3CompareMatch1func
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W DMA_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W EVRT_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1b080000 A __top_MFlashB512
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0021cc 00000002 W __aeabi_idiv0
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001cd4 0000004c T timer2CompareMatch0func
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a00017e 00000002 W BusFault_Handler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0011bc 00000034 T Chip_Clock_Enable
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001a9e 0000000a T UART3_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W MCPWM_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W M0APP_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001ac4 00000074 T boardInit
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001d20 0000004c T timer3CompareMatch0func
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000040 000000d4 T g_pfnVendorVectors
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W GINT1_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0017e0 00000018 T Timer_SetCompareMatch
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a001b8c 0000001c T timer1CompareMatch2func
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a00190c 00000018 T tickPowerSet
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0010f4 00000058 T Chip_Clock_SetBaseClock
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0013d0 0000001c T cyclesCounterInit
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a0001ba 00000002 W GPIO4_IRQHandler
+PRUEBAS/PruebaMotores/out/PruebaMotores.elf:1a000740 0000000c T Board_SystemInit
