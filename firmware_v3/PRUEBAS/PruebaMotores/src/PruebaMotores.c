@@ -38,6 +38,8 @@ int index = 0;
 #define MAX_POS_Y 195
 #define MIN_POS_Y 15
 
+#define MM_TO_STEP(X) ((int)(X * 4.44444444))
+
 int posX;
 int posY;
 
@@ -278,25 +280,45 @@ void drawX( MotorPins_t motor1, MotorPins_t motor2, int side, int velocity){
    moveY(motor1, motor2, DOWN, side, velocity);
 }
 
+void readTECdrawFigure( MotorPins_t motor1, MotorPins_t motor2 ){
+   if (!gpioRead( TEC1 )){
+      gpioWrite( LED1, ON );
+      drawSquare(motor1, motor2, 80, SPEED);
+      gpioWrite( LED1, OFF );
+   }
+   if (!gpioRead( TEC2 )){
+      gpioWrite( LED2, ON );
+      drawCircle(motor1, motor2, 3, SPEED);
+      gpioWrite( LED2, OFF );
+
+   }
+   if (!gpioRead( TEC3 )){
+      gpioWrite( LED3, ON );
+      drawX(motor1, motor2, 80, SPEED);
+      gpioWrite( LED3, OFF );
+   }
+}
 
 void drawFigure( MotorPins_t motor1, MotorPins_t motor2, char c ){
    int i;
    switch(c)
    {
       case 'C':
-         drawSquare(motor1, motor2, 80, SPEED);
+         drawSquare(motor1, motor2, MM_TO_STEP(30), SPEED);
          break;
       case 'O':
-         drawCircle(motor1, motor2, 2, SPEED);
+         drawCircle(motor1, motor2, 4, SPEED);
          break;
       case 'X':
-         drawX(motor1, motor2, 80, SPEED);
+         drawX(motor1, motor2, MM_TO_STEP(30), SPEED);
          break;
       default :
          for(i=0;i<10;i++){
             gpioWrite( LEDR, ON );
+            gpioWrite( LED2, ON );
             delay(200);
             gpioWrite( LEDR, OFF );
+            gpioWrite( LED2, OFF );
             delay(200);
          }
    }
@@ -312,7 +334,9 @@ int main(void) {
    printerInit( &motor1, &motor2 );
 
    // Inicializar la UART
-   uartConfig(UART_232, 115200); // Comunicacion UART con la ESP32
+   //uartConfig(UART_232, 115200); // Comunicacion UART con la ESP32
+   uartConfig(UART_232, 9600); // Comunicaci�n DEBUG
+   
    char receivedChar;
 
     // Bucle infinito para controlar el motor
@@ -322,35 +346,20 @@ int main(void) {
 
       delay(200);
 
-      if (!gpioRead( TEC1 )){
-         gpioWrite( LED1, ON );
-         drawSquare(motor1, motor2, 80, SPEED);
-         gpioWrite( LED1, OFF );
-      }
-      if (!gpioRead( TEC2 )){
-         gpioWrite( LED2, ON );
-         drawCircle(motor1, motor2, 3, SPEED);
-         gpioWrite( LED2, OFF );
-
-      }
-      if (!gpioRead( TEC3 )){
-         gpioWrite( LED3, ON );
-         drawX(motor1, motor2, 80, SPEED);
-         gpioWrite( LED3, OFF );
+      if (uartReadByte(UART_232, (uint8_t*)&receivedChar)) {
+         gpioWrite( LEDG, OFF );
+         drawFigure(motor1, motor2, receivedChar);
+         delay(200);
+         uartWriteByte(UART_232, 'F');
+         delay(200);
+         gpioWrite( LEDG, ON );
       }
 
       gpioWrite( LEDG, OFF );
 
       delay(200);
       
-      /*
-      if (uartReadByte(UART_232, (uint8_t*)&receivedChar)) {
-         drawFigure(motor1, motor2, receivedChar);
-         delay(200);
-         uartWriteByte(UART_232, 'F');
-         delay(200);
-      }
-      */
+      
 /*
       gpioWrite( LED2, ON );
       drawX(motor1, motor2, 80, SPEED);
