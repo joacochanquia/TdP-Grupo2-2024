@@ -1,5 +1,11 @@
 #include "sapi.h"  // Biblioteca de la EDU-CIAA
 #include <math.h>
+#include <string.h>
+
+// Buffer para almacenar la figura recibida
+#define BUFFER_SIZE 50
+char figuraRecibida[BUFFER_SIZE];
+int index = 0;
 
 
 // Definir los pines para control del motor paso a paso
@@ -51,12 +57,12 @@ void initServo( int servoPin ){
 
 void servoUp( int servoPin ){
    servoWrite( servoPin, SERVO_UP );
-   delay(200);
+   delay(250);
 }
 
 void servoDown( int servoPin ){
    servoWrite( servoPin, SERVO_DOWN );
-   delay(200);
+   delay(250);
 }
 
 // Funcion de inicializacion de los motores
@@ -216,31 +222,36 @@ void moveY(MotorPins_t motor1, MotorPins_t motor2, bool sentido, int stepCount, 
 
 void moveDiagonal(MotorPins_t motor1, MotorPins_t motor2, bool sentidoX, bool sentidoY, int stepCount, int velocity){
    if ( sentidoX ^ sentidoY ) {
-      motorRun(motor1, !sentidoX, stepCount, velocity);
+      motorRun(motor2, sentidoX, stepCount, velocity);
    }else{
-      motorRun(motor2, !sentidoX, stepCount, velocity);
+      motorRun(motor1, sentidoX, stepCount, velocity);
    }
 }
 
 // Funcion para dibujar un cuadrado
 void drawSquare(MotorPins_t motor1, MotorPins_t motor2, int side, int velocity){
+   servoDown( SERVO_N );
    moveX(motor1, motor2, RIGHT, side, velocity);
-   moveY(motor1, motor2, DOWN, side, velocity);
-   moveX(motor1, motor2, LEFT, side, velocity);
    moveY(motor1, motor2, UP, side, velocity);
+   moveX(motor1, motor2, LEFT, side, velocity);
+   moveY(motor1, motor2, DOWN, side, velocity);
+   servoUp( SERVO_N );
 }
 
 // Funcion para dibujar un rectangulo
 void drawRectangle(MotorPins_t motor1, MotorPins_t motor2, int side1, int side2, int velocity){
+   servoDown( SERVO_N );
    moveX(motor1, motor2, RIGHT, side1, velocity);
-   moveY(motor1, motor2, DOWN, side2, velocity);
-   moveX(motor1, motor2, LEFT, side1, velocity);
    moveY(motor1, motor2, UP, side2, velocity);
+   moveX(motor1, motor2, LEFT, side1, velocity);
+   moveY(motor1, motor2, DOWN, side2, velocity);
+   servoUp( SERVO_N );
 }
 
 // Funcion para dibujar un circulo
 void drawCircle(MotorPins_t motor1, MotorPins_t motor2, int radius, int velocity) {
    int steps = 360; // Dividir el círculo en 360 pasos
+   servoDown( SERVO_N );
    for (int i = 0; i < steps; i++) {
       float angle = (2 * PI * i) / steps;
       int x = radius * cos(angle);
@@ -252,9 +263,23 @@ void drawCircle(MotorPins_t motor1, MotorPins_t motor2, int radius, int velocity
       // Mover en el eje Y
       moveY(motor1, motor2, y > 0 ? UP : DOWN, fabs(y), velocity);
    }
+   servoUp( SERVO_N );
+
 }
 
-void drawFigure( char c ){
+void drawX( MotorPins_t motor1, MotorPins_t motor2, int side, int velocity){
+   servoDown( SERVO_N );
+   moveDiagonal(motor1, motor2, RIGHT, UP, 2 * side, velocity);
+   servoUp( SERVO_N );
+   moveY(motor1, motor2, DOWN, side, velocity);
+   servoDown( SERVO_N );
+   moveDiagonal(motor1, motor2, LEFT, UP, 2 * side, velocity);
+   servoUp( SERVO_N );
+   moveY(motor1, motor2, DOWN, side, velocity);
+}
+
+
+void drawFigure( MotorPins_t motor1, MotorPins_t motor2, char c ){
    int i;
    switch(c)
    {
@@ -263,6 +288,9 @@ void drawFigure( char c ){
          break;
       case 'O':
          drawCircle(motor1, motor2, 2, SPEED);
+         break;
+      case 'X':
+         drawX(motor1, motor2, 80, SPEED);
          break;
       default :
          for(i=0;i<10;i++){
@@ -282,31 +310,60 @@ int main(void) {
    MotorPins_t motor2;
 
    printerInit( &motor1, &motor2 );
-   
+
+   // Inicializar la UART
+   uartConfig(UART_232, 115200); // Comunicacion UART con la ESP32
+   char receivedChar;
+
     // Bucle infinito para controlar el motor
-    while (1) {
+   while (1) {
       /* Prendo el led azul */
-      gpioWrite( LEDB, ON );
+      gpioWrite( LEDG, ON );
 
-      delay(500);
+      delay(200);
 
-      /* Apago el led azul */
-      gpioWrite( LEDB, OFF );
+      if (!gpioRead( TEC1 )){
+         gpioWrite( LED1, ON );
+         drawSquare(motor1, motor2, 80, SPEED);
+         gpioWrite( LED1, OFF );
+      }
+      if (!gpioRead( TEC2 )){
+         gpioWrite( LED2, ON );
+         drawCircle(motor1, motor2, 3, SPEED);
+         gpioWrite( LED2, OFF );
 
-      delay(500);
+      }
+      if (!gpioRead( TEC3 )){
+         gpioWrite( LED3, ON );
+         drawX(motor1, motor2, 80, SPEED);
+         gpioWrite( LED3, OFF );
+      }
+
+      gpioWrite( LEDG, OFF );
+
+      delay(200);
       
-
-      gpioWrite( LED2, ON );
-      servoDown( SERVO_N );
-      drawCircle(motor1, motor2, 2, SPEED);
-      servoUp( SERVO_N );
-      gpioWrite( LED2, OFF ); 
-
+      /*
+      if (uartReadByte(UART_232, (uint8_t*)&receivedChar)) {
+         drawFigure(motor1, motor2, receivedChar);
+         delay(200);
+         uartWriteByte(UART_232, 'F');
+         delay(200);
+      }
+      */
 /*
       gpioWrite( LED2, ON );
-      servoDown( SERVO_N );
+      drawX(motor1, motor2, 80, SPEED);
+      gpioWrite( LED2, OFF ); 
+
+
+      gpioWrite( LED2, ON );
+      drawCircle(motor1, motor2, 10, SPEED);
+      gpioWrite( LED2, OFF ); 
+
+
+      gpioWrite( LED2, ON );
       drawSquare(motor1, motor2, 80, SPEED);
-      servoUp( SERVO_N );
       gpioWrite( LED2, OFF );
 */
 /*
@@ -354,7 +411,7 @@ int main(void) {
       twoMotorRun(motor1, H, motor2, H, 200, SPEED);
       gpioWrite( LED2, OFF );
 */
-      delay(1000);
+      //delay(1000);
 
     }
 
