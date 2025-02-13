@@ -243,6 +243,26 @@ void moveAngle(MotorPins_t motor1, MotorPins_t motor2, int angle, int stepCount,
    }
 }
 
+void moveTo( MotorPins_t motor1 , MotorPins_t motor2 , int16_t X , int16_t Y ){
+   int16_t Ys = MM_TO_STEP(Y);
+   int16_t Xs = MM_TO_STEP(X);
+   
+   if ( Ys > posY ){
+      moveY( motor1, motor2, UP, Ys - posY, SPEED );
+      posY = Ys;
+   }else{
+      moveY( motor1, motor2, DOWN, posY - Ys, SPEED );
+      posY = Ys;
+   }
+   if ( Xs > posX ){
+      moveX( motor1, motor2, RIGHT, Xs - posX, SPEED );
+      posX = Xs;
+   }else{
+      moveX( motor1, motor2, LEFT, posX - Xs, SPEED );
+      posX = Xs;
+   }
+}
+
 // Funcion para dibujar un cuadrado
 void drawSquare(MotorPins_t motor1, MotorPins_t motor2, int side, int velocity){
    servoDown();
@@ -263,64 +283,7 @@ void drawRectangle(MotorPins_t motor1, MotorPins_t motor2, int side1, int side2,
    servoUp();
 }
 
-// Funcion para dibujar un circulo
-void drawCircleQUEFUNCIONA(MotorPins_t motor1, MotorPins_t motor2, int radius, int velocity) {
-   int steps = 360; // Dividir el círculo en 360 pasos
-   servoDown();
-   for (int i = 0; i < steps; i++) {
-      float angle = (2 * PI * i) / steps;
-      int x = radius * cos(angle);
-      int y = radius * sin(angle);
-      
-      // Mover en el eje X
-      moveX(motor1, motor2, x > 0 ? RIGHT : LEFT, fabs(x), velocity);
-      
-      // Mover en el eje Y
-      moveY(motor1, motor2, y > 0 ? UP : DOWN, fabs(y), velocity);
-   }
-   servoUp();
 
-}
-// Funcion para dibujar un circulo
-void drawCircleLINDO(MotorPins_t motor1, MotorPins_t motor2, int radius, int velocity) {
-   int steps = 360; // Dividir el círculo en 360 pasos
-   int smooth = 10;
-   servoDown();
-   for (int i = 0; i < steps; i+=10) {
-      float angle = (2 * PI * i) / steps;
-      int x = radius * cos(angle);
-      int y = radius * sin(angle);
-      
-      // Mover en el eje X
-      moveX(motor1, motor2, x > 0 ? RIGHT : LEFT, fabs(x), velocity);
-      
-      // Mover en el eje Y
-      moveY(motor1, motor2, y > 0 ? UP : DOWN, fabs(y), velocity);
-   }
-   servoUp();
-
-}
-
-
-// Funcion para dibujar un circulo
-void drawCircle(MotorPins_t motor1, MotorPins_t motor2, int radius, int velocity) {
-   int steps = 360; // Dividir el círculo en 360 pasos
-   int smooth = radius/8;
-   servoDown();
-   for (int i = 0; i < steps; i+=smooth) {
-      float angle = (2 * PI * i) / steps;
-      int x = (smooth) * cos(angle);
-      int y = (smooth) * sin(angle);
-      
-      // Mover en el eje X
-      moveX(motor1, motor2, x > 0 ? RIGHT : LEFT, fabs(x), velocity);
-      
-      // Mover en el eje Y
-      moveY(motor1, motor2, y > 0 ? UP : DOWN, fabs(y), velocity);
-   }
-   servoUp();
-
-}
 
 void drawX( MotorPins_t motor1, MotorPins_t motor2, int side, int velocity){
    servoDown();
@@ -353,31 +316,50 @@ void drawTriangle(MotorPins_t motor1, MotorPins_t motor2, int side, int velocity
    servoUp();
 }
 
-void readTECdrawFigure( MotorPins_t motor1, MotorPins_t motor2 ){
-   if (!gpioRead( TEC1 )){
-      gpioWrite( LED1, ON );
-      drawSquare(motor1, motor2, MM_TO_STEP(20), SPEED);
-      gpioWrite( LED1, OFF );
+// Funcion para dibujar un circulo
+void drawCircle(MotorPins_t motor1, MotorPins_t motor2, int radius, int velocity) {
+   int steps = 360; // Dividir el círculo en 360 pasos
+   int smooth = radius/8;
+   servoDown();
+   for (int i = 0; i < steps; i+=smooth) {
+      float angle = (2 * PI * i) / steps;
+      int x = (smooth) * cos(angle);
+      int y = (smooth) * sin(angle);
+      
+      // Mover en el eje X
+      moveX(motor1, motor2, x > 0 ? RIGHT : LEFT, fabs(x), velocity);
+      
+      // Mover en el eje Y
+      moveY(motor1, motor2, y > 0 ? UP : DOWN, fabs(y), velocity);
    }
-   if (!gpioRead( TEC2 )){
-      gpioWrite( LED2, ON );
-      drawCircle(motor1, motor2, MM_TO_STEP(20), SPEED);
-      gpioWrite( LED2, OFF );
-
-   }
-   if (!gpioRead( TEC3 )){
-      gpioWrite( LED3, ON );
-      drawX(motor1, motor2, MM_TO_STEP(20), SPEED);
-      gpioWrite( LED3, OFF );
-   }
-   if (!gpioRead( TEC4 )){
-      gpioWrite( LEDR, ON );
-      gpioWrite( LEDG, ON );
-      drawStar(motor1, motor2, MM_TO_STEP(20), SPEED);
-      gpioWrite( LEDR, OFF );
-      gpioWrite( LEDG, OFF );
-   }
+   servoUp();
 }
+
+void drawHeart(MotorPins_t motor1, MotorPins_t motor2, int size, int velocity){
+   int i, j;
+   int steps = 180; // Dividir el círculo en 360 pasos
+   int smooth = size/8;
+   int diagSize = (int)(size * 1.3);
+   servoDown();
+   moveDiagonal(motor1, motor2, RIGHT, UP, diagSize, velocity);
+   for(j = 0; j < 2; j++){
+      delay(50);
+      for (i = 0; i < ((steps / 2)+6); i+=smooth) {
+         float angle = (PI * i) / (steps / 2);
+         int x = (smooth) * sin(angle);
+         int y = (smooth) * cos(angle);
+         // Mover en el eje X
+         moveX(motor1, motor2, x > 0 ? LEFT : RIGHT, fabs(x), velocity);
+         // Mover en el eje Y
+         moveY(motor1, motor2, y > 0 ? UP : DOWN, fabs(y), velocity);
+      }
+   }
+   delay(50);
+   moveDiagonal(motor1, motor2, RIGHT, DOWN, diagSize, velocity);
+   servoUp();
+}
+
+
 
 void drawFigure( MotorPins_t motor1, MotorPins_t motor2, char c ){
    int i;
@@ -398,10 +380,9 @@ void drawFigure( MotorPins_t motor1, MotorPins_t motor2, char c ){
       case 'S':
          drawStar(motor1, motor2, 80, SPEED);
          break;
-      /*
       case 'H':
-         drawHeart();
-         break;*/
+         drawHeart(motor1, motor2, 80, SPEED);
+         break;
       default :
          for(i=0;i<3;i++){
             gpioWrite( LEDR, ON );
@@ -411,6 +392,46 @@ void drawFigure( MotorPins_t motor1, MotorPins_t motor2, char c ){
             gpioWrite( LED2, OFF );
             delay(200);
          }
+   }
+}
+
+void showFigure( MotorPins_t motor1, MotorPins_t motor2, char c ){
+   moveTo( motor1, motor2, 0, -60 );
+   drawFigure(motor1, motor2, c);
+   moveTo( motor1, motor2, 0, 0 );
+}
+
+void readTECdrawFigure( MotorPins_t motor1, MotorPins_t motor2 ){
+   if (!gpioRead( TEC1 )){
+      gpioWrite( LED1, ON );
+      moveTo( motor1, motor2, 0, -30 );
+      showFigure(motor1, motor2, 'C');
+      moveTo( motor1, motor2, 0, 0 );
+      gpioWrite( LED1, OFF );
+   }
+   if (!gpioRead( TEC2 )){
+      gpioWrite( LED2, ON );
+      moveTo( motor1, motor2, 0, -30 );
+      showFigure(motor1, motor2, 'O');
+      moveTo( motor1, motor2, 0, 0 );
+      gpioWrite( LED2, OFF );
+
+   }
+   if (!gpioRead( TEC3 )){
+      gpioWrite( LED3, ON );
+      moveTo( motor1, motor2, 0, -30 );
+      showFigure(motor1, motor2, 'X');
+      moveTo( motor1, motor2, 0, 0 );
+      gpioWrite( LED3, OFF );
+   }
+   if (!gpioRead( TEC4 )){
+      gpioWrite( LEDR, ON );
+      gpioWrite( LEDG, ON );
+      moveTo( motor1, motor2, 0, -30 );
+      showFigure(motor1, motor2, 'H');
+      moveTo( motor1, motor2, 0, 0 );
+      gpioWrite( LEDR, OFF );
+      gpioWrite( LEDG, OFF );
    }
 }
 
@@ -427,7 +448,7 @@ void conectAPP(MotorPins_t motor1, MotorPins_t motor2){
          gpioWrite( LEDG, OFF );
       }
       if (receivedChar >= 'A' && receivedChar <= 'Z') {
-         drawFigure(motor1, motor2, receivedChar);
+         showFigure(motor1, motor2, receivedChar);
          uartWriteByte(UART_232, 'F');
          //uartWriteByte(UART_USB, receivedChar);
          delay(200);
@@ -436,25 +457,7 @@ void conectAPP(MotorPins_t motor1, MotorPins_t motor2){
    }
 }
 
-void moveTo( MotorPins_t motor1 , MotorPins_t motor2 , int16_t X , int16_t Y ){
-   int16_t Ys = MM_TO_STEP(Y);
-   int16_t Xs = MM_TO_STEP(X);
-   
-   if ( Ys > posY ){
-      moveY( motor1, motor2, UP, Ys - posY, SPEED );
-      posY = Ys;
-   }else{
-      moveY( motor1, motor2, DOWN, posY - Ys, SPEED );
-      posY = Ys;
-   }
-   if ( Xs > posX ){
-      moveX( motor1, motor2, RIGHT, Xs - posX, SPEED );
-      posX = Xs;
-   }else{
-      moveX( motor1, motor2, LEFT, posX - Xs, SPEED );
-      posX = Xs;
-   }
-}
+
 
 // Funcion principal del programa
 int main(void) {
@@ -467,7 +470,7 @@ int main(void) {
 
    // Inicializar la UART
    //uartConfig(UART_USB, 9600); // Comunicacion UART con la ESP32
-   uartConfig(UART_232, 9600); // Comunicaci�n DEBUG
+   uartConfig(UART_232, 9600); // Comunicacion DEBUG
 
    // Bucle infinito para controlar el motor
    while (1) {
@@ -476,7 +479,7 @@ int main(void) {
       delay(200);
      
       //conectAPP( motor1, motor2 );
-      //readTECdrawFigure( motor1, motor2 );
+      readTECdrawFigure( motor1, motor2 );
 
 
  /*     
@@ -508,6 +511,7 @@ int main(void) {
          delay(1000);
       }
       */
+      /*
       if (!gpioRead( TEC1 )){
          moveTo( motor1, motor2, 30, 30 );
          delay(1000);
@@ -526,6 +530,7 @@ int main(void) {
          moveTo( motor1, motor2, 0, 0 );
          delay(1000);
       }
+      */
       gpioWrite( LEDB, OFF );
       delay(200);
 /*
