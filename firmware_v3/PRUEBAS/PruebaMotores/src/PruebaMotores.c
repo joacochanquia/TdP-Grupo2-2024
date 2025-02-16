@@ -823,7 +823,7 @@ int main(void) {
       gpioWrite( LEDB, ON );
       delay(200);
      
-      //conectAPP( motor1, motor2 );
+      conectAPP( motor1, motor2 );
       //readTECdrawFigure( motor1, motor2 );
       //readTECandTATETI( motor1, motor2 );
       //readTECdrawAngle( motor1, motor2 );
