@@ -5,13 +5,10 @@
 #include "edge-impulse-sdk/dsp/image/image.hpp"
 #include "esp_camera.h"
 
-// Configuración de WiFi
-const char* ssid = "Fibertel WiFi128 2.4GHz_EXT";         // Cambia por el nombre de tu red WiFi
-const char* password = "041863381";  // Cambia por la contraseña de tu WiFi
-
-// Configuración de IP estática
-IPAddress local_IP(192, 168, 0, 32);     // IP fija que quieras usar
-IPAddress gateway(192, 168, 0, 1);       // Gateway de tu router
+const char* ssid = "Barcala 2.4G";         // Cambia por el nombre de tu red WiFi
+const char* password = "barcala2024";  // Cambia por la contraseña de tu WiFi
+IPAddress local_IP(10, 0, 22, 73);     // IP fija que quieras usar
+IPAddress gateway(10, 0, 22, 1);       // Gateway de tu router
 IPAddress subnet(255, 255, 255, 0);    // Máscara de subred
 
 // Configuración de UART
@@ -176,12 +173,20 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
                     figura = 'X';
                 } else if (mensaje == "estrella") {
                     figura = 'S';
+                } else if (mensaje == "corazon"){
+                   figura = 'H';
+                } else if (mensaje == "cuadrado") {
+                    figura = 'C';
                 } else if (mensaje == "replicar") {
                     figura = reconocerFigura(); // Llamar a la función de reconocimiento
                 } else {
                     figura = 'M';
                 }
+                mySerial.print('.');
+                mySerial.print('*');
                 mySerial.print(figura);
+                mySerial.print('*');
+                mySerial.print('.');
                 //Serial.println(mySerial.read());
                 //Serial.println(figura);
             }
@@ -201,7 +206,7 @@ char reconocerFigura() {
     int counts[4] = {0}; // Counts for each figure (X, T, C, O)
     float precision[4] = {0.0}; // Sum of precision for each figure
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 15; i++) {
         // instead of wait_ms, we'll wait on the signal, this allows threads to cancel us...
         if (ei_sleep(5) != EI_IMPULSE_OK) {
             return figuraDetectada;
