@@ -134,12 +134,15 @@ void loop() {
 
     // Verificar si hay datos disponibles en el puerto serial
     if (mySerial.available()) {
-        char receivedChar = mySerial.read(); // Leer el carácter recibido
+        String receivedString = mySerial.readString(); // Lee todo lo disponible en el buffer
 
-        // Si el carácter recibido es 'F', enviar "dibujo completado" a la app
-        if (receivedChar == 'F') {
+        // Si el mensaje es 'F', enviar "dibujo completado" a la app
+        if (receivedString == "F") {
             webSocket.broadcastTXT("dibujo_completado");
-            //Serial.println("Dibujo completado enviado a la app");
+        }
+        // Si el mensaje empieza con "robot-", reenviar a la app web
+        else if (receivedString.startsWith("robot-")) {
+            webSocket.broadcastTXT(receivedString);
         }
     }
 

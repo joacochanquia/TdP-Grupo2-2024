@@ -464,6 +464,17 @@
                         document.getElementById('estado-dibujo').style.display = 'none';
                         document.getElementById('btn-replicar').disabled = false;
                     }
+                } else if (event.data.startsWith('robot-')) {
+                    // Procesar jugada del robot
+                    const [_, x, y] = event.data.split('-');
+                    if (x >= 1 && x <= 3 && y >= 1 && y <= 3) {
+                        const casilla = document.querySelector(`.casilla[data-x="${x}"][data-y="${y}"]`);
+                        casilla.classList.add('o');
+                        tableroActual[y-1][x-1] = 'O';
+                        esperandoRobot = false;
+                        document.getElementById('estado-juego').textContent = 'Tu turno';
+                        habilitarTablero();
+                    }
                 } else {
                     if (document.getElementById('modo-replicar').style.display === 'block') {
                         // Estamos en modo replicar
