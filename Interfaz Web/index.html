@@ -356,24 +356,38 @@
     <!-- Modo Ta-Te-Ti -->
     <div id="modo-tateti" class="modo">
         <h2>Ta-Te-Ti</h2>
-        <div id="tablero-tateti" class="tablero-tateti">
-            <div class="fila">
-                <div class="casilla" data-x="1" data-y="1" onclick="realizarJugada(this)"></div>
-                <div class="casilla" data-x="2" data-y="1" onclick="realizarJugada(this)"></div>
-                <div class="casilla" data-x="3" data-y="1" onclick="realizarJugada(this)"></div>
-            </div>
-            <div class="fila">
-                <div class="casilla" data-x="1" data-y="2" onclick="realizarJugada(this)"></div>
-                <div class="casilla" data-x="2" data-y="2" onclick="realizarJugada(this)"></div>
-                <div class="casilla" data-x="3" data-y="2" onclick="realizarJugada(this)"></div>
-            </div>
-            <div class="fila">
-                <div class="casilla" data-x="1" data-y="3" onclick="realizarJugada(this)"></div>
-                <div class="casilla" data-x="2" data-y="3" onclick="realizarJugada(this)"></div>
-                <div class="casilla" data-x="3" data-y="3" onclick="realizarJugada(this)"></div>
-            </div>
+        
+        <!-- Nueva sección para dibujar tablero -->
+        <div id="inicio-tateti">
+            <button class="menu-button" onclick="dibujarTablero()">
+                <i class="material-icons-round">grid_on</i> Dibujar Tablero
+            </button>
         </div>
-        <div id="estado-juego" class="estado-juego">Tu turno</div>
+
+        <!-- Contenido existente del tablero (ahora inicialmente oculto) -->
+        <div id="juego-tateti" style="display: none;">
+            <div id="tablero-tateti" class="tablero-tateti">
+                <div class="fila">
+                    <div class="casilla" data-x="1" data-y="1" onclick="realizarJugada(this)"></div>
+                    <div class="casilla" data-x="2" data-y="1" onclick="realizarJugada(this)"></div>
+                    <div class="casilla" data-x="3" data-y="1" onclick="realizarJugada(this)"></div>
+                </div>
+                <div class="fila">
+                    <div class="casilla" data-x="1" data-y="2" onclick="realizarJugada(this)"></div>
+                    <div class="casilla" data-x="2" data-y="2" onclick="realizarJugada(this)"></div>
+                    <div class="casilla" data-x="3" data-y="2" onclick="realizarJugada(this)"></div>
+                </div>
+                <div class="fila">
+                    <div class="casilla" data-x="1" data-y="3" onclick="realizarJugada(this)"></div>
+                    <div class="casilla" data-x="2" data-y="3" onclick="realizarJugada(this)"></div>
+                    <div class="casilla" data-x="3" data-y="3" onclick="realizarJugada(this)"></div>
+                </div>
+            </div>
+            <div id="estado-juego" class="estado-juego">Tu turno</div>
+            <button class="menu-button" onclick="finalizarPartida()">
+                <i class="material-icons-round">stop</i> Finalizar Partida
+            </button>
+        </div>
         <button class="volver-btn" onclick="volverAlMenu()">Volver al menú</button>
     </div>
 
@@ -382,6 +396,12 @@
         function mostrarModo(modo) {
             document.getElementById('menu-principal').style.display = 'none';
             document.getElementById(modo).style.display = 'block';
+            
+            if (modo === 'modo-tateti') {
+                document.getElementById('inicio-tateti').style.display = 'block';
+                document.getElementById('juego-tateti').style.display = 'none';
+                reiniciarTablero();
+            }
         }
         function mostrarSubmodo(submodo) {
         // Ocultar opciones principales
@@ -430,12 +450,20 @@
     
             socket.onmessage = (event) => {
                 console.log('Mensaje del servidor:', event.data);
-                if (event.data === 'dibujo_completado') {
-                    // Habilitar todos los botones
-                    habilitarBotones();
-                    document.getElementById('estado-replicar').style.display = 'none';
-                    document.getElementById('estado-dibujo').style.display = 'none';
-                    document.getElementById('btn-replicar').disabled = false;
+                if (event.data === 'F') {
+                    if (document.getElementById('inicio-tateti').style.display !== 'none') {
+                        // Si estamos en modo ta-te-ti y recibimos F después de dibujar tablero
+                        document.getElementById('inicio-tateti').style.display = 'none';
+                        document.getElementById('juego-tateti').style.display = 'block';
+                        document.getElementById('estado-juego').textContent = 'Tu turno';
+                        reiniciarTablero();
+                    } else {
+                        // Comportamiento existente para otros modos
+                        habilitarBotones();
+                        document.getElementById('estado-replicar').style.display = 'none';
+                        document.getElementById('estado-dibujo').style.display = 'none';
+                        document.getElementById('btn-replicar').disabled = false;
+                    }
                 } else {
                     if (document.getElementById('modo-replicar').style.display === 'block') {
                         // Estamos en modo replicar
@@ -617,6 +645,34 @@
                          resultado === 'O' ? '¡Perdiste!' : 
                          '¡Empate!';
             document.getElementById('estado-juego').textContent = mensaje;
+        }
+
+        function dibujarTablero() {
+            sendWebSocketData('tablero');
+            document.getElementById('estado-juego').textContent = 'Dibujando tablero...';
+        }
+
+        function finalizarPartida() {
+            sendWebSocketData('finalizar');
+            document.getElementById('inicio-tateti').style.display = 'block';
+            document.getElementById('juego-tateti').style.display = 'none';
+            reiniciarTablero();
+        }
+
+        function reiniciarTablero() {
+            // Limpiar la matriz
+            tableroActual = [
+                ['', '', ''],
+                ['', '', ''],
+                ['', '', '']
+            ];
+            
+            // Limpiar el tablero visual
+            document.querySelectorAll('.casilla').forEach(casilla => {
+                casilla.classList.remove('x', 'o', 'disabled');
+            });
+            
+            esperandoRobot = false;
         }
     </script>
 </body>
