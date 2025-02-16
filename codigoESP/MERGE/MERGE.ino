@@ -184,25 +184,31 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
                 String mensaje = String((char*)payload);
                 //Serial.printf("[%u] Texto recibido: %s\n", num, mensaje.c_str());
                 if (mensaje == "circulo") {
-                    figura = 'O';
+                    enviarDibujo('O'); // Enviar el dibujo al robot
                 } else if (mensaje == "cuadrado") {
-                    figura = 'C';
+                    enviarDibujo('C'); // Enviar el dibujo al robot
                 } else if (mensaje == "triangulo") {
-                    figura = 'T';
+                    enviarDibujo('T'); // Enviar el dibujo al robot
                 } else if (mensaje == "cruz") {
-                    figura = 'X';
+                    enviarDibujo('X'); // Enviar el dibujo al robot
                 } else if (mensaje == "estrella") {
-                    figura = 'S';
-                } else if (mensaje == "corazon"){
-                   figura = 'H';
-                } else if (mensaje == "cuadrado") {
-                    figura = 'C';
+                    enviarDibujo('S'); // Enviar el dibujo al robot
+                } else if (mensaje == "corazon") {
+                    enviarDibujo('H'); // Enviar el dibujo al robot
                 } else if (mensaje == "replicar") {
                     figura = reconocerFigura(); // Llamar a la función de reconocimiento
+                    enviarDibujo(figura); // Enviar el dibujo al robot
+                } else if (mensaje == "tablero") {
+                    enviarJuego('T'); // Enviar el comando para dibujar el tablero
+                } else if (mensaje == "finalizar") {
+                    enviarJuego('L'); // Enviar el comando para dibujar el tablero
+                } else if (mensaje.startsWith("tateti-")) {
+                    char posX = mensaje.charAt(7); // Obtener la posición X
+                    char posY = mensaje.charAt(9); // Obtener la posición Y
+                    enviarDibujoTablero('X', posX, posY); // Enviar el dibujo al robot
                 } else {
-                    figura = 'M';
+                    //Serial.println("Comando no reconocido"); 
                 }
-                enviarDibujo(figura); // Enviar el dibujo al robot
                 //Serial.println(mySerial.read());
                 //Serial.println(figura);
             }

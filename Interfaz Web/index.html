@@ -450,7 +450,7 @@
     
             socket.onmessage = (event) => {
                 console.log('Mensaje del servidor:', event.data);
-                if (event.data === 'F') {
+                if (event.data === "dibujo_completado") {
                     if (document.getElementById('inicio-tateti').style.display !== 'none') {
                         // Si estamos en modo ta-te-ti y recibimos F después de dibujar tablero
                         document.getElementById('inicio-tateti').style.display = 'none';
