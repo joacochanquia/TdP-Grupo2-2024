@@ -208,7 +208,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
                 } else if (mensaje.startsWith("tateti-")) {
                     char posX = mensaje.charAt(7); // Obtener la posición X
                     char posY = mensaje.charAt(9); // Obtener la posición Y
-                    enviarDibujoTablero('X', posX, posY); // Enviar el dibujo al robot
+                    enviarDibujoTablero('O', posX, posY); // Enviar el dibujo al robot
                 } else {
                     //Serial.println("Comando no reconocido"); 
                 }
