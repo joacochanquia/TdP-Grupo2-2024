@@ -456,16 +456,16 @@
                     document.getElementById('estado-replicar').style.display = 'none';
                     document.getElementById('estado-dibujo').style.display = 'none';
                     document.getElementById('btn-replicar').disabled = false;
-                } else if (event.data >= '0' && event.data <= '8') {
-                    // Jugada del robot
-                    const pos = parseInt(event.data);
-                    const x = (pos % 3);  // Ahora 0-based
-                    const y = Math.floor(pos / 3);  // Ahora 0-based
                     
-                    if (document.getElementById('inicio-tateti').style.display !== 'none') {
-                        document.getElementById('inicio-tateti').style.display = 'none';
-                        document.getElementById('juego-tateti').style.display = 'block';
+                    // Si estamos en modo tateti, actualizar el estado
+                    if (document.getElementById('modo-tateti').style.display === 'block') {
+                        document.getElementById('estado-juego').textContent = 'Tu turno';
                     }
+                } else if (event.data >= '1' && event.data <= '9') {
+                    // Jugada del robot
+                    const pos = parseInt(event.data) - 1;
+                    const x = (pos % 3);
+                    const y = Math.floor(pos / 3);
                     
                     const casilla = document.querySelector(`.casilla[data-x="${x+1}"][data-y="${y+1}"]`);
                     casilla.classList.add('x');
@@ -552,16 +552,15 @@
                 return;
             }
 
-            const x = parseInt(casilla.dataset.x) - 1;  // Convertir a 0-based
-            const y = parseInt(casilla.dataset.y) - 1;  // Convertir a 0-based
-            const pos = (y * 3) + x;  // Calcula la posición 0-8
+            const x = parseInt(casilla.dataset.x);  // Mantener 1-based para el envío
+            const y = parseInt(casilla.dataset.y);  // Mantener 1-based para el envío
             
             // Actualizar tablero visual y lógico
             casilla.classList.add('o');
-            tableroActual[y][x] = 'O';
+            tableroActual[y-1][x-1] = 'O';  // Ajustar a 0-based para el array
 
-            // Enviar la posición como string
-            socket.send(pos.toString());
+            // Enviar en formato tateti-x-y
+            socket.send(`tateti-${x}-${y}`);
             
             esperandoRobot = true;
             document.getElementById('estado-juego').textContent = 'Turno del robot...';
@@ -640,6 +639,8 @@
         function dibujarTablero() {
             sendWebSocketData('tablero');
             document.getElementById('estado-juego').textContent = 'Dibujando tablero...';
+            document.getElementById('inicio-tateti').style.display = 'none';
+            document.getElementById('juego-tateti').style.display = 'block';
         }
 
         function finalizarPartida() {
