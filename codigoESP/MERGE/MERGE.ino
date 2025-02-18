@@ -89,7 +89,7 @@ bool ei_camera_capture(uint32_t img_width, uint32_t img_height, uint8_t *out_buf
 int ei_camera_get_data(size_t offset, size_t length, float *out_ptr);
 void enviarDibujo(char figura);
 void enviarJuego(char accion);
-void enviarDibujoTablero(char figura, char pos);
+void enviarDibujoTablero(char figura, char posX, char posY);
 /**
  * @brief      Arduino setup function
  */
@@ -139,8 +139,8 @@ void loop() {
         if (receivedChar == 'F') {
             webSocket.broadcastTXT("dibujo_completado");
         }
-        // Si es un dígito del 0 al 8, lo reenvía directamente
-        else if (receivedChar >= '0' && receivedChar <= '8') {
+        // Si es un dígito del 1 al 9, lo reenvía directamente
+        else if (receivedChar >= '1' && receivedChar <= '9') {
             String message(receivedChar);  // Convierte el char a String para broadcastTXT
             webSocket.broadcastTXT(message);
         }
@@ -162,8 +162,8 @@ void enviarJuego(char accion) {
 }
 
 // Function to create and send a drawing command string with position on the board
-void enviarDibujoTablero(char figura, char pos) {
-    String command = ".*JD" + String(figura) + String(pos) + "*.";
+void enviarDibujoTablero(char figura, char posX, char posY) {
+    String command = ".*JD" + String(figura) + String(posX) + String(posY) + "*.";
     mySerial.print(command);
 }
 
@@ -205,9 +205,10 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
                     enviarJuego('T'); // Enviar el comando para dibujar el tablero
                 } else if (mensaje == "finalizar") {
                     enviarJuego('L'); // Enviar el comando para dibujar el tablero
-                } else if (mensaje.length() == 1 && isdigit(mensaje[0])) {
-                    // Nueva forma simplificada de enviar jugada
-                    enviarDibujoTablero('X', mensaje[0]);
+                } else if (mensaje.startsWith("tateti-")) {
+                    char posX = mensaje.charAt(7); // Obtener la posición X
+                    char posY = mensaje.charAt(9); // Obtener la posición Y
+                    enviarDibujoTablero('X', posX, posY); // Enviar el dibujo al robot
                 } else {
                     //Serial.println("Comando no reconocido"); 
                 }
