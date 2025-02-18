@@ -451,30 +451,28 @@
             socket.onmessage = (event) => {
                 console.log('Mensaje del servidor:', event.data);
                 if (event.data === "dibujo_completado") {
+                    // Solo para modo dibujo y replicar
+                    habilitarBotones();
+                    document.getElementById('estado-replicar').style.display = 'none';
+                    document.getElementById('estado-dibujo').style.display = 'none';
+                    document.getElementById('btn-replicar').disabled = false;
+                } else if (event.data >= '0' && event.data <= '8') {
+                    // Jugada del robot
+                    const pos = parseInt(event.data);
+                    const x = (pos % 3);  // Ahora 0-based
+                    const y = Math.floor(pos / 3);  // Ahora 0-based
+                    
                     if (document.getElementById('inicio-tateti').style.display !== 'none') {
-                        // Si estamos en modo ta-te-ti y recibimos F después de dibujar tablero
                         document.getElementById('inicio-tateti').style.display = 'none';
                         document.getElementById('juego-tateti').style.display = 'block';
-                        document.getElementById('estado-juego').textContent = 'Tu turno';
-                        reiniciarTablero();
-                    } else {
-                        // Comportamiento existente para otros modos
-                        habilitarBotones();
-                        document.getElementById('estado-replicar').style.display = 'none';
-                        document.getElementById('estado-dibujo').style.display = 'none';
-                        document.getElementById('btn-replicar').disabled = false;
                     }
-                } else if (event.data.startsWith('robot-')) {
-                    // Procesar jugada del robot
-                    const [_, x, y] = event.data.split('-');
-                    if (x >= '1' && x <= '3' && y >= '1' && y <= '3') {
-                        const casilla = document.querySelector(`.casilla[data-x="${x}"][data-y="${y}"]`);
-                        casilla.classList.add('O');
-                        tableroActual[(y-'0')-1][(x-'0')-1] = 'O';
-                        esperandoRobot = false;
-                        document.getElementById('estado-juego').textContent = 'Tu turno';
-                        habilitarTablero();
-                    }
+                    
+                    const casilla = document.querySelector(`.casilla[data-x="${x+1}"][data-y="${y+1}"]`);
+                    casilla.classList.add('x');
+                    tableroActual[y][x] = 'X';
+                    esperandoRobot = false;
+                    document.getElementById('estado-juego').textContent = 'Tu turno';
+                    habilitarTablero();
                 } else {
                     if (document.getElementById('modo-replicar').style.display === 'block') {
                         // Estamos en modo replicar
@@ -535,12 +533,7 @@
             document.getElementById('btn-replicar').disabled = false;
         }
     
-        // Modificamos la función existente iniciarJuego
-        function iniciarJuego(quienInicia) {
-            console.log('Inicia:', quienInicia);
-            sendWebSocketData('tateti-' + quienInicia);
-            volverAlMenu();
-        }
+
     
         // Agregamos el evento para la conexión WebSocket
         window.onload = function() {
@@ -559,34 +552,20 @@
                 return;
             }
 
-            const x = casilla.dataset.x;
-            const y = casilla.dataset.y;
+            const x = parseInt(casilla.dataset.x) - 1;  // Convertir a 0-based
+            const y = parseInt(casilla.dataset.y) - 1;  // Convertir a 0-based
+            const pos = (y * 3) + x;  // Calcula la posición 0-8
             
             // Actualizar tablero visual y lógico
-            casilla.classList.add('x');
-            tableroActual[y-1][x-1] = 'X';
+            casilla.classList.add('o');
+            tableroActual[y][x] = 'O';
 
-            // Enviar jugada al robot
-            sendWebSocketData(`tateti-${x}-${y}`);
+            // Enviar la posición como string
+            socket.send(pos.toString());
             
-            // Deshabilitar tablero mientras espera
             esperandoRobot = true;
             document.getElementById('estado-juego').textContent = 'Turno del robot...';
             deshabilitarTablero();
-        }
-
-        function procesarJugadaRobot(x, y) {
-            const casilla = document.querySelector(`.casilla[data-x="${x}"][data-y="${y}"]`);
-            casilla.classList.add('o');
-            tableroActual[y-1][x-1] = 'O';
-            esperandoRobot = false;
-            
-            if (verificarGanador()) {
-                finalizarJuego();
-            } else {
-                document.getElementById('estado-juego').textContent = 'Tu turno';
-                habilitarTablero();
-            }
         }
 
         function deshabilitarTablero() {
@@ -652,8 +631,8 @@
         function finalizarJuego() {
             deshabilitarTablero();
             const resultado = verificarGanador();
-            let mensaje = resultado === 'X' ? '¡Ganaste!' : 
-                         resultado === 'O' ? '¡Perdiste!' : 
+            let mensaje = resultado === 'O' ? '¡Ganaste!' :  // Cambiado de 'X' a 'O'
+                         resultado === 'X' ? '¡Perdiste!' :  // Cambiado de 'O' a 'X'
                          '¡Empate!';
             document.getElementById('estado-juego').textContent = mensaje;
         }
