@@ -473,6 +473,18 @@
                     esperandoRobot = false;
                     document.getElementById('estado-juego').textContent = 'Tu turno';
                     habilitarTablero();
+                } else if (event.data == 'gano_robot') {
+                    // Jugada del robot
+                    document.getElementById('estado-juego').textContent = '¡Perdiste!';
+                    deshabilitarTablero();
+                } else if (event.data == 'gano_jugador') {
+                    // Jugada del robot
+                    document.getElementById('estado-juego').textContent = '¡Ganaste!';
+                    deshabilitarTablero();
+                } else if (event.data == 'empate') {
+                    // Jugada del robot
+                    document.getElementById('estado-juego').textContent = '¡Empate!';
+                    deshabilitarTablero();
                 } else {
                     if (document.getElementById('modo-replicar').style.display === 'block') {
                         // Estamos en modo replicar
@@ -641,6 +653,7 @@
             document.getElementById('estado-juego').textContent = 'Dibujando tablero...';
             document.getElementById('inicio-tateti').style.display = 'none';
             document.getElementById('juego-tateti').style.display = 'block';
+            deshabilitarTablero();
         }
 
         function finalizarPartida() {
