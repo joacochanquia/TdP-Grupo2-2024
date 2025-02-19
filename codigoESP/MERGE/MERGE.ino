@@ -140,7 +140,7 @@ void loop() {
             webSocket.broadcastTXT("dibujo_completado");
         }
         // Si es un dígito del 1 al 9, lo reenvía directamente
-        else if (receivedChar >= '1' && receivedChar <= '9') {
+        else if (receivedChar >= '0' && receivedChar <= '8') {
             String message(receivedChar);  // Convierte el char a String para broadcastTXT
             webSocket.broadcastTXT(message);
         }

@@ -1,6 +1,7 @@
 #include "sapi.h"  // Biblioteca de la EDU-CIAA
 #include <math.h>  // Biblioteca para funciones matemáticas
 #include <string.h>  // Biblioteca para funciones de manipulación de cadenas
+#include "TATETI.h"  // Biblioteca para el juego TATETI
 
 // Tamaño de buffer para los caraacteres de la comunicacion UART
 #define BUFFER_SIZE 50
@@ -41,13 +42,10 @@
 
 // Macro para convertir milímetros a pasos del motor
 #define MM_TO_STEP(X) ((int)(X * 4.44444444))
-
+#define TO_STEP 4.44444444444
 // Variables globales para almacenar la posición actual en los ejes X e Y
 int16_t posX;
 int16_t posY;
-
-// Definir una matriz de 3x3 para el tablero de TA-TE-TI
-char board[3][3];
 
 // Estructura para almacenar los pines de control de un motor
 typedef struct {
@@ -225,8 +223,12 @@ void moveAngleOld(MotorPins_t motor1, MotorPins_t motor2, int angle, int stepCou
 
 // Funcion para mover en un angulo
 void moveAngle(MotorPins_t motor1, MotorPins_t motor2, int angle, int stepCount, int velocity){
-   int i;
-   int smooth = 6;
+   int i, smooth;
+   if ((angle == 45)||(angle == 135)||(angle == 225)||(angle == 315)){
+      smooth = 2;
+   }else{
+      smooth = 6;
+   }
    float radianAngle = angle * (PI / 180.0); // Convertir el ángulo a radianes
    float auxX =  cos(radianAngle); // Calcular el coseno del ángulo
    int x = smooth * auxX; // Calcular el desplazamiento en X
@@ -261,7 +263,8 @@ void moveTo( MotorPins_t motor1 , MotorPins_t motor2 , int16_t X , int16_t Y ){
 void moveToRel(MotorPins_t motor1, MotorPins_t motor2, int16_t deltaX, int16_t deltaY) {
    int16_t newX = posX + MM_TO_STEP(deltaX);
    int16_t newY = posY + MM_TO_STEP(deltaY);
-
+   newX = (int)(newX/TO_STEP);
+   newY = (int)(newY/TO_STEP);
    moveTo(motor1, motor2, newX, newY);
 }
 
@@ -286,7 +289,7 @@ void drawRectangle(MotorPins_t motor1, MotorPins_t motor2, int side1, int side2,
 }
 
 // Funcion para dibujar una X
-void drawX( MotorPins_t motor1, MotorPins_t motor2, int side, int velocity){
+void drawXOld( MotorPins_t motor1, MotorPins_t motor2, int side, int velocity){
    // Dibujar primer diagonal
    servoDown();
    moveDiagonal(motor1, motor2, RIGHT, UP, 2 * side, velocity);
@@ -297,6 +300,24 @@ void drawX( MotorPins_t motor1, MotorPins_t motor2, int side, int velocity){
    moveDiagonal(motor1, motor2, LEFT, UP, 2 * side, velocity);
    servoUp();
    moveY(motor1, motor2, DOWN, side, velocity);
+}
+
+// Funcion para dibujar una X
+void drawX( MotorPins_t motor1, MotorPins_t motor2, int side, int velocity){
+   // Dibujar primer diagonal
+   servoDown();
+   moveAngle(motor1, motor2, 45, (int)(side * 2.0), velocity);
+   //moveDiagonal(motor1, motor2, RIGHT, UP, 2 * side, velocity);
+   servoUp();
+   moveY(motor1, motor2, DOWN, (int)(side * 1.0), velocity);
+   //moveX(motor1, motor2, RIGHT, (int)(side * 0.0), velocity);
+   // Dibujar segunda diagonal
+   servoDown();
+   moveAngle(motor1, motor2, 135, (int)(side * 2.2), velocity);
+   //moveDiagonal(motor1, motor2, LEFT, UP, 2 * side, velocity);
+   servoUp();
+   moveY(motor1, motor2, DOWN, (int)(side * 0.975), velocity);
+   //moveX(motor1, motor2, RIGHT, (int)(side * 0.0), velocity);
 }
 
 // Funcion para dibujar una estrella
@@ -548,14 +569,22 @@ void drawBoard( MotorPins_t motor1, MotorPins_t motor2 ){
    moveTo( motor1, motor2, 0, 20);
 }
 
+void getCoords(char coords, int * posX, int * posY){
+   int pos = coords - '0';
+   *posX = pos % 3;
+   *posY = pos / 3;
+}
+
 // Funcion para moverse dentro del tablero de TA-TE-TI
-void moveBoard( MotorPins_t motor1, MotorPins_t motor2, char x, char y){
-   if (x >= '1' && x <= '3' && y >= '1' && y <= '3') {
-      int posX = ((x - 0x30) * 40) - 90;
-      int posY = ((y - 0x30) * -40) + 10;
+int moveInBoard( MotorPins_t motor1, MotorPins_t motor2, char x, char y){
+   if (x >= '0' && x <= '2' && y >= '0' && y <= '2') {
+      int posX = ((x - 0x30) * 40) - 55;
+      int posY = ((y - 0x30) * -40) - 35;
       moveTo(motor1, motor2, posX, posY);
+      return 1;
    } else {
       showError();
+      return 0;
    }
 }
 
@@ -568,7 +597,7 @@ void readTECdrawFigure( MotorPins_t motor1, MotorPins_t motor2 ){
    }
    if (!gpioRead( TEC2 )){
       gpioWrite( LED2, ON );
-      showFigureVar(motor1, motor2, 'X', 40);
+      showFigure(motor1, motor2, 'C');
       gpioWrite( LED2, OFF );
 
    }
@@ -580,7 +609,7 @@ void readTECdrawFigure( MotorPins_t motor1, MotorPins_t motor2 ){
    if (!gpioRead( TEC4 )){
       gpioWrite( LEDR, ON );
       gpioWrite( LEDG, ON );
-      showFigureVar(motor1, motor2, 'X', 160);
+      showFigureVar(motor1, motor2, 'X', 120);
       //drawBoard(motor1, motor2);
       gpioWrite( LEDR, OFF );
       gpioWrite( LEDG, OFF );
@@ -687,62 +716,64 @@ void conectAPPTHIS(MotorPins_t motor1, MotorPins_t motor2){
 }
 
 void drawInBoard(MotorPins_t motor1, MotorPins_t motor2, char figure, int x, char y){
-   moveBoard(motor1, motor2, x, y);
-   if ((figure == 'X') || (figure == 'C') || (figure == 'S') || (figure == 'T')){
-      drawFigureVar(motor1, motor2, figure, 100);
-   }else{
-      moveToRel(motor1, motor2, 20, 0);
-      drawFigureVar(motor1, motor2, figure, 100);
-      moveToRel(motor1, motor2, -20, 0);
-   }
-   moveTo( motor1, motor2, 0, 20 );
-}
-
-void cleanBoard(){
-   int i, j;
-   for (i = 0; i < 3; i++) {
-      for (j = 0; j < 3; j++) {
-         board[i][j] = '\0';
+   if (moveInBoard(motor1, motor2, x, y)){
+      if ((figure == 'O') || (figure == 'H')){
+         moveToRel(motor1, motor2, 15, 0);
+         drawFigureVar(motor1, motor2, figure, 90);
+         moveToRel(motor1, motor2, -15, 0);
+      }else{
+         drawFigureVar(motor1, motor2, figure, 100);
       }
+      moveTo( motor1, motor2, 0, 20 );
+   }else{
+      showError();
    }
 }
 
 void modeTATETI(MotorPins_t motor1, MotorPins_t motor2, char * buffer, int bufferIndex){
-   int i;
+   int i, posX, posY;
    switch (buffer[1])
    {
    case 'T':
       cleanBoard();
       drawBoard(motor1, motor2);
+      delay(50);
+      char firstMove = startGame();
+      //char firstMove = '4';
+      getCoords(firstMove, &posX, &posY);
+      drawInBoard(motor1, motor2, 'X', posX + '0', posY + '0');
+      //drawInBoard(motor1, motor2, 'X', '1', '1');
+      uartWriteByte(UART_232, firstMove);
       break;
    case 'D':
-      if (((buffer[2] == 'X') || (buffer[2] == 'O')) && (board[buffer[3] - 0x30][buffer[4] - 0x30] == '\0')){
+      //if (//el casillero no esta ocupado
          drawInBoard(motor1, motor2, buffer[2], buffer[3], buffer[4]);
-         board[buffer[3] - 0x30][buffer[4] - 0x30] = buffer[2];
-         char nextMove[3];
-         //jugarTATETI(board, nextMove);
-         nextMove = "O22";
-         if ((nextMove != NULL) && (nextMove[1] >= '1' && nextMove[1] <= '3') && (nextMove[2] >= '1' && nextMove[2] <= '3')) {
+         char played = (buffer[3] - '0' + (buffer[4] - '0') * 3) + '0';
+         char nextMove = jugarTATETI(played);
+         //nextMove = '5';
+         if ((nextMove !=  'F') && (nextMove >= '0' && nextMove <= '8')){ 
             delay(50);
-            drawInBoard(motor1, motor2, nextMove[0], nextMove[1], nextMove[2]);
-            board[(nextMove[1] - '0')-1][(nextMove[2] - '0')-1] = nextMove[0];
-            char message[10] = "robot-";
-            message[6] = nextMove[1];
-            message[7] = '-';
-            message[8] = nextMove[2];
-            message[9] = '\0';
-            uartWriteString(UART_232, message);
+            getCoords(nextMove, &posX, &posY);
+            /*
+            int move = nextMove - '0';
+            posX = move % 3;
+            posY = move / 3;
+            */
+            drawInBoard(motor1, motor2, 'X', posX + '0', posY + '0');
          } else {
             // No hay espacio en el tablero
             showError();
          }
-      }else{
+         uartWriteByte(UART_232, nextMove);
+         /*
+         }else{
          // No es una X ni O o la casilla ya está ocupada
          showError();
-      }
+      }*/
       break;
    case 'L':
-      cleanBoard();
+      moveTo(motor1, motor2, 0, 0);
+      cleanBoard(board);
       break;
    default:
       showError();
@@ -805,6 +836,7 @@ void conectAPP(MotorPins_t motor1, MotorPins_t motor2) {
             {
             case 'D':
                showFigure(motor1, motor2, buffer[1]);
+               uartWriteByte(UART_232, 'F');
                break;
             case 'J':
                modeTATETI(motor1, motor2, buffer, bufferIndex);
@@ -813,7 +845,6 @@ void conectAPP(MotorPins_t motor1, MotorPins_t motor2) {
                showError();
                break;
             }
-            uartWriteByte(UART_232, 'F');
             delay(200);
          }
       }
@@ -870,8 +901,8 @@ int main(void) {
       gpioWrite( LEDB, ON );
       delay(200);
      
-      //conectAPP( motor1, motor2 );
-      readTECdrawFigure( motor1, motor2 );
+      conectAPP( motor1, motor2 );
+      //readTECdrawFigure( motor1, motor2 );
       //readTECandTATETI( motor1, motor2 );
       //readTECdrawAngle( motor1, motor2 );
 

@@ -461,9 +461,9 @@
                     if (document.getElementById('modo-tateti').style.display === 'block') {
                         document.getElementById('estado-juego').textContent = 'Tu turno';
                     }
-                } else if (event.data >= '1' && event.data <= '9') {
+                } else if (event.data >= '0' && event.data <= '8') {
                     // Jugada del robot
-                    const pos = parseInt(event.data) - 1;
+                    const pos = parseInt(event.data);
                     const x = (pos % 3);
                     const y = Math.floor(pos / 3);
                     
@@ -552,12 +552,12 @@
                 return;
             }
 
-            const x = parseInt(casilla.dataset.x);  // Mantener 1-based para el envío
-            const y = parseInt(casilla.dataset.y);  // Mantener 1-based para el envío
+            const x = parseInt(casilla.dataset.x)-1; 
+            const y = parseInt(casilla.dataset.y)-1;  
             
             // Actualizar tablero visual y lógico
             casilla.classList.add('o');
-            tableroActual[y-1][x-1] = 'O';  // Ajustar a 0-based para el array
+            tableroActual[y][x] = 'O'; 
 
             // Enviar en formato tateti-x-y
             socket.send(`tateti-${x}-${y}`);
