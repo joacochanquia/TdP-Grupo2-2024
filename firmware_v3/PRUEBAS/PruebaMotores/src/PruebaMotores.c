@@ -208,20 +208,6 @@ void moveDiagonal(MotorPins_t motor1, MotorPins_t motor2, bool sentidoX, bool se
 }
 
 // Funcion para mover en un angulo
-void moveAngleOld(MotorPins_t motor1, MotorPins_t motor2, int angle, int stepCount, int velocity){
-   int i;
-   float radianAngle = angle * (PI / 180.0); // Convertir el ángulo a radianes
-   float auxX =  cos(radianAngle); // Calcular el coseno del ángulo
-   int x = stepCount * auxX; // Calcular el desplazamiento en X
-   float auxY =  sin(radianAngle); // Calcular el seno del ángulo
-   int y = stepCount * auxY; // Calcular el desplazamiento en Y
-   for (i = 0; i < stepCount; i++) {
-      moveX(motor1, motor2, x > 0 ? RIGHT : LEFT, fabs(x), velocity);
-      moveY(motor1, motor2, y > 0 ? UP : DOWN, fabs(y), velocity);
-   }
-}
-
-// Funcion para mover en un angulo
 void moveAngle(MotorPins_t motor1, MotorPins_t motor2, int angle, int stepCount, int velocity){
    int i, smooth;
    if ((angle == 45)||(angle == 135)||(angle == 225)||(angle == 315)){
@@ -289,20 +275,6 @@ void drawRectangle(MotorPins_t motor1, MotorPins_t motor2, int side1, int side2,
 }
 
 // Funcion para dibujar una X
-void drawXOld( MotorPins_t motor1, MotorPins_t motor2, int side, int velocity){
-   // Dibujar primer diagonal
-   servoDown();
-   moveDiagonal(motor1, motor2, RIGHT, UP, 2 * side, velocity);
-   servoUp();
-   moveY(motor1, motor2, DOWN, side, velocity);
-   // Dibujar segunda diagonal
-   servoDown();
-   moveDiagonal(motor1, motor2, LEFT, UP, 2 * side, velocity);
-   servoUp();
-   moveY(motor1, motor2, DOWN, side, velocity);
-}
-
-// Funcion para dibujar una X
 void drawX( MotorPins_t motor1, MotorPins_t motor2, int side, int velocity){
    // Dibujar primer diagonal
    servoDown();
@@ -321,18 +293,6 @@ void drawX( MotorPins_t motor1, MotorPins_t motor2, int side, int velocity){
 }
 
 // Funcion para dibujar una estrella
-void drawStarOld(MotorPins_t motor1, MotorPins_t motor2, int side, int velocity){
-   int i;  
-   servoDown();
-   moveAngle(motor1, motor2, 72, side, velocity);
-   moveAngle(motor1, motor2, 288, side, velocity);
-   moveAngle(motor1, motor2, 144, side, velocity);
-   moveAngle(motor1, motor2, 0, side, velocity);
-   moveAngle(motor1, motor2, 216, side, velocity);
-   servoUp();
-}
-
-// Funcion para dibujar una estrella
 void drawStar(MotorPins_t motor1, MotorPins_t motor2, int side, int velocity){
    int i;  
    servoDown();
@@ -345,15 +305,6 @@ void drawStar(MotorPins_t motor1, MotorPins_t motor2, int side, int velocity){
 }
 
 // Funcion para dibujar un triangulo
-void drawTriangleOld(MotorPins_t motor1, MotorPins_t motor2, int side, int velocity){
-   servoDown();
-   moveX(motor1, motor2, RIGHT, side, velocity);
-   moveDiagonal(motor1, motor2, LEFT, UP, side, velocity);
-   moveDiagonal(motor1, motor2, LEFT, DOWN, side, velocity);
-   servoUp();
-}
-
-// Funcion para dibujar un triangulo
 void drawTriangle(MotorPins_t motor1, MotorPins_t motor2, int side, int velocity){
    servoDown();
    moveX(motor1, motor2, RIGHT, side, velocity);
@@ -361,25 +312,6 @@ void drawTriangle(MotorPins_t motor1, MotorPins_t motor2, int side, int velocity
    moveAngle(motor1, motor2, 122, side, velocity);
    delay(50);
    moveAngle(motor1, motor2, 238, side, velocity);
-   servoUp();
-}
-
-// Funcion para dibujar un circulo
-void drawCircleOld(MotorPins_t motor1, MotorPins_t motor2, int radius, int velocity) {
-   int steps = 360; // Dividir el círculo en 360 pasos
-   int smooth = radius/8;
-   servoDown();
-   for (int i = 0; i < steps; i+=smooth) {
-      float angle = (2 * PI * i) / steps;
-      int x = (smooth) * cos(angle);
-      int y = (smooth) * sin(angle);
-      
-      // Mover en el eje X
-      moveX(motor1, motor2, x > 0 ? RIGHT : LEFT, fabs(x), velocity);
-      
-      // Mover en el eje Y
-      moveY(motor1, motor2, y > 0 ? UP : DOWN, fabs(y), velocity);
-   }
    servoUp();
 }
 
@@ -399,59 +331,6 @@ void drawCircle(MotorPins_t motor1, MotorPins_t motor2, int radius, int velocity
       // Mover en el eje Y
       moveY(motor1, motor2, y > 0 ? UP : DOWN, fabs(y), velocity);
    }
-   servoUp();
-}
-
-// Funcion para dibujar un corazon
-void drawHeartOld(MotorPins_t motor1, MotorPins_t motor2, int size, int velocity){
-   int i, j;
-   int steps = 180; // Dividir el círculo en 360 pasos
-   int smooth = 10;
-   int diagSize = (int)(size * 1.3);
-   servoDown();
-   moveDiagonal(motor1, motor2, RIGHT, UP, diagSize, velocity);
-   // Dibujar dos semicirculos
-   for(j = 0; j < 2; j++){
-      delay(50);
-      for (i = 0; i < ((steps / 2)+6); i+=smooth) {
-         float angle = (PI * i) / (steps / 2);
-         int x = (smooth) * sin(angle);
-         int y = (smooth) * cos(angle);
-         // Mover en el eje X
-         moveX(motor1, motor2, x > 0 ? LEFT : RIGHT, fabs(x), velocity);
-         // Mover en el eje Y
-         moveY(motor1, motor2, y > 0 ? UP : DOWN, fabs(y), velocity);
-      }
-   }
-   delay(50);
-   moveDiagonal(motor1, motor2, RIGHT, DOWN, diagSize, velocity);
-   servoUp();
-}
-
-// Funcion para dibujar un corazon
-void drawHeartCute(MotorPins_t motor1, MotorPins_t motor2, int size, int velocity){
-   int i, j;
-   int steps = 180; // Dividir el círculo en 360 pasos
-   int smooth = 5;
-   int diagSizeA = (int)(size * 1.1);
-   int diagSizeB = (int)(size * 1.25);
-   servoDown();
-   moveDiagonal(motor1, motor2, RIGHT, UP, diagSizeA, velocity);
-   // Dibujar dos semicirculos
-   for(j = 0; j < 2; j++){
-      delay(50);
-      for (i = 0; i < ((steps / 2)); i+=smooth) {
-         float angle = (PI * i) / (steps / 2);
-         int x = (smooth) * sin(angle);
-         int y = (smooth) * cos(angle);
-         // Mover en el eje X
-         moveX(motor1, motor2, x > 0 ? LEFT : RIGHT, fabs(x), velocity);
-         // Mover en el eje Y
-         moveY(motor1, motor2, y > 0 ? UP : DOWN, fabs(y), velocity);
-      }
-   }
-   delay(50);
-   moveDiagonal(motor1, motor2, RIGHT, DOWN, diagSizeB, velocity);
    servoUp();
 }
 
@@ -592,58 +471,6 @@ int moveInBoard( MotorPins_t motor1, MotorPins_t motor2, char x, char y){
    }
 }
 
-void conectAPPold(MotorPins_t motor1, MotorPins_t motor2){
-   char receivedChar;
-   if (uartReadByte(UART_232, (uint8_t*)&receivedChar)) {
-      gpioWrite( LEDB, OFF );
-      if (receivedChar < 'A' || receivedChar > 'Z'){
-         gpioWrite( LEDR, ON );
-         gpioWrite( LEDG, ON );
-         while((uartReadByte(UART_232, (uint8_t*)&receivedChar) && (receivedChar < 'A' || receivedChar > 'Z'))){
-         }
-         gpioWrite( LEDR, OFF );
-         gpioWrite( LEDG, OFF );
-      }
-      if (receivedChar >= 'A' && receivedChar <= 'Z') {
-         showFigure(motor1, motor2, receivedChar);
-         uartWriteByte(UART_232, 'F');
-         //uartWriteByte(UART_USB, receivedChar);
-         delay(200);
-      }
-      gpioWrite( LEDB, ON );
-   }
-}
-
-void conectAPPTHIS(MotorPins_t motor1, MotorPins_t motor2){
-   char receivedChar, receivedLetter;
-   if (uartReadByte(UART_232, (uint8_t*)&receivedChar)) {
-      gpioWrite( LEDB, OFF );
-      if (receivedChar != '.'){
-         gpioWrite( LEDR, ON );
-         gpioWrite( LEDG, ON );
-         while((uartReadByte(UART_232, (uint8_t*)&receivedChar) && (receivedChar != '.'))){
-         }
-         gpioWrite( LEDR, OFF );
-         gpioWrite( LEDG, OFF );
-      }
-      if (receivedChar == '.') {
-         if ((uartReadByte(UART_232, (uint8_t*)&receivedChar))&&(receivedChar == '*')) {
-            if ((uartReadByte(UART_232, (uint8_t*)&receivedLetter))&&((receivedLetter >= 'A' && receivedLetter <= 'Z')||(receivedLetter >= '0' && receivedLetter <= '9'))) {
-               if ((uartReadByte(UART_232, (uint8_t*)&receivedChar))&&(receivedChar == '*')) {
-                  if ((uartReadByte(UART_232, (uint8_t*)&receivedChar))&&(receivedChar == '.')) {
-                     showFigure(motor1, motor2, receivedLetter);
-                     uartWriteByte(UART_232, 'F');
-                     //uartWriteByte(UART_USB, receivedChar);
-                     delay(200);
-                  }
-               }
-            }
-         }
-      }
-      gpioWrite( LEDB, ON );
-   }
-}
-
 void drawInBoard(MotorPins_t motor1, MotorPins_t motor2, char figure, int x, char y){
    if (moveInBoard(motor1, motor2, x, y)){
       if ((figure == 'O') || (figure == 'H')){
@@ -682,6 +509,21 @@ int sendWinner(){
    }
 }
 
+void playRobot(MotorPins_t motor1, MotorPins_t motor2, char played){
+   int posX, posY;
+   char nextMove = jugarTATETI(played);
+   if ((nextMove !=  'F') && (nextMove >= '0' && nextMove <= '8')){ 
+      delay(50);
+      getCoords(nextMove, &posX, &posY);
+      drawInBoard(motor1, motor2, 'X', posX + '0', posY + '0');
+   } else {
+      // No hay espacio en el tablero
+      showError();
+   }
+   uartWriteByte(UART_232, nextMove);
+   sendWinner();
+}
+
 void modeTATETI(MotorPins_t motor1, MotorPins_t motor2, char * buffer, int bufferIndex){
    int i, posX, posY;
    char played;
@@ -699,30 +541,11 @@ void modeTATETI(MotorPins_t motor1, MotorPins_t motor2, char * buffer, int buffe
    case 'D':
       drawInBoard(motor1, motor2, buffer[2], buffer[3], buffer[4]);
       played = (((buffer[3] - '0') + (buffer[4] - '0') * 3) + '0');
-      char nextMove = jugarTATETI(played);
-      if ((nextMove !=  'F') && (nextMove >= '0' && nextMove <= '8')){ 
-         delay(50);
-         getCoords(nextMove, &posX, &posY);
-         drawInBoard(motor1, motor2, 'X', posX + '0', posY + '0');
-      } else {
-         // No hay espacio en el tablero
-         showError();
-      }
-      uartWriteByte(UART_232, nextMove);
-      sendWinner();
+      playRobot(motor1, motor2, played);
       break;
    case 'P':
       played = (((buffer[3] - '0') + (buffer[4] - '0') * 3) + '0');
-      char nextMove = jugarTATETI(played);
-      if ((nextMove !=  'F') && (nextMove >= '0' && nextMove <= '8')){ 
-         delay(50);
-         getCoords(nextMove, &posX, &posY);
-         drawInBoard(motor1, motor2, 'X', posX + '0', posY + '0');
-      } else {
-         // No hay espacio en el tablero
-         showError();
-      }
-      uartWriteByte(UART_232, nextMove);
+      playRobot(motor1, motor2, played);
       break;
    case 'L':
       moveTo(motor1, motor2, 0, 0);
@@ -939,8 +762,8 @@ int main(void) {
    printerInit( &motor1, &motor2 );
 
    // Inicializar la UART
-   //uartConfig(UART_USB, 9600); // Comunicacion UART con la ESP32
-   uartConfig(UART_232, 9600); // Comunicacion DEBUG
+   //uartConfig(UART_USB, 9600); // Comunicacion DEBUG
+   uartConfig(UART_232, 9600); // Comunicacion UART con la ESP32
 
    // Bucle infinito para controlar el motor
    while (1) {
@@ -954,118 +777,8 @@ int main(void) {
       //readTECandTATETI( motor1, motor2 );
       //readTECdrawAngle( motor1, motor2 );
 
- /*     
-      motorRun(motor2, H, 100, SPEED);
-      
-      delay(1000);
-
-      motorRun(motor2, AH, 100, SPEED);
-
-      delay(1000);
-*/
-      /*
-      if (!gpioRead( TEC1 )){
-         moveTo( motor1, motor2, 30, 0 );
-         delay(1000);
-         moveTo( motor1, motor2, 0, 0 );
-         delay(1000);
-         moveTo( motor1, motor2, 0, 30 );
-         delay(1000);
-         moveTo( motor1, motor2, 0, 0 );
-         delay(1000);
-         moveTo( motor1, motor2, -30, 0 );
-         delay(1000);
-         moveTo( motor1, motor2, 0, 0 );
-         delay(1000);
-         moveTo( motor1, motor2, 0, -30 );
-         delay(1000);
-         moveTo( motor1, motor2, 0, 0 );
-         delay(1000);
-      }
-      */
-      /*
-      if (!gpioRead( TEC1 )){
-         moveTo( motor1, motor2, 30, 30 );
-         delay(1000);
-         moveTo( motor1, motor2, 0, 0 );
-         delay(1000);
-         moveTo( motor1, motor2, -30, 30 );
-         delay(1000);
-         moveTo( motor1, motor2, 0, 0 );
-         delay(1000);
-         moveTo( motor1, motor2, -30, -30 );
-         delay(1000);
-         moveTo( motor1, motor2, 0, 0 );
-         delay(1000);
-         moveTo( motor1, motor2, 30, -30 );
-         delay(1000);
-         moveTo( motor1, motor2, 0, 0 );
-         delay(1000);
-      }
-      */
       gpioWrite( LEDB, OFF );
       delay(200);
-/*
-      gpioWrite( LED2, ON );
-      drawX(motor1, motor2, 80, SPEED);
-      gpioWrite( LED2, OFF ); 
-
-
-      gpioWrite( LED2, ON );
-      drawCircle(motor1, motor2, 10, SPEED);
-      gpioWrite( LED2, OFF ); 
-
-
-      gpioWrite( LED2, ON );
-      drawSquare(motor1, motor2, 80, SPEED);
-      gpioWrite( LED2, OFF );
-*/
-/*
-      gpioWrite( LEDR, ON );
-      gpioWrite( LED3, ON );
-      // Realizar 200 pasos en sentido horario motor 1
-      motorRun(motor1, H, 200, SPEED);
-      gpioWrite( LEDR, OFF );
-      gpioWrite( LED3, OFF );
-
-      // Pausa antes de cambiar de direcci�n
-      delay(1000);
-
-      gpioWrite( LEDG, ON );
-      gpioWrite( LED3, ON );
-      // Realizar 200 pasos en sentido horario motor 2
-      motorRun(motor2, H, 200, SPEED);
-      gpioWrite( LEDG, OFF );
-      gpioWrite( LED3, OFF );
-
-      // Pausa antes de repetir el ciclo
-      delay(1000);
-
-      gpioWrite( LEDR, ON );
-      gpioWrite( LED1, ON );
-      // Realizar 200 pasos en sentido antihorario motor 1
-      motorRun(motor1, AH, 200, SPEED);
-      gpioWrite( LEDR, OFF );
-      gpioWrite( LED1, OFF );
-
-      // Pausa antes de cambiar de direcci�n
-      delay(1000);
-
-      gpioWrite( LEDG, ON );
-      gpioWrite( LED1, ON );
-      // Realizar 200 pasos en sentido antihorario motor 2
-      motorRun(motor2, AH, 200, SPEED);
-      gpioWrite( LEDG, OFF );
-      gpioWrite( LED1, OFF );
-
-      // Pausa antes de repetir el ciclo
-      delay(1000);
-
-      gpioWrite( LED2, ON );
-      twoMotorRun(motor1, H, motor2, H, 200, SPEED);
-      gpioWrite( LED2, OFF );
-*/
-      //delay(1000);
 
     }
 
