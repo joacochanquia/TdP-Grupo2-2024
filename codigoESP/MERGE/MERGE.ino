@@ -1,7 +1,7 @@
 #include <WiFi.h>
 #include <WebSocketsServer_Generic.h>
 #include <HardwareSerial.h>
-#include <ImgClassifier_inferencing.h>
+#include <ObjectDetection_inferencing.h>
 #include "edge-impulse-sdk/dsp/image/image.hpp"
 #include "esp_camera.h"
 
@@ -18,6 +18,7 @@ char figura = 0;
 WebSocketsServer webSocket = WebSocketsServer(81);  // WebSocket en puerto 81
 
 // Configuración de la cámara
+#define LED_PIN 4
 #define CAMERA_MODEL_AI_THINKER // Has PSRAM
 #if defined(CAMERA_MODEL_AI_THINKER)
 #define PWDN_GPIO_NUM     32
@@ -101,6 +102,9 @@ void setup() {
         //Serial.println("Error al configurar IP estática");
     }
 
+    pinMode(LED_PIN, OUTPUT);
+    digitalWrite(LED_PIN, LOW);
+
     // Conectar a WiFi
     WiFi.begin(ssid, password);
     //Serial.print("Conectando a WiFi");
@@ -139,6 +143,18 @@ void loop() {
         if (receivedChar == 'F') {
             webSocket.broadcastTXT("dibujo_completado");
         }
+        else if (receivedChar == 'W') {
+            
+            webSocket.broadcastTXT("gano_robot");
+        }
+        else if (receivedChar == 'T') {
+            
+            webSocket.broadcastTXT("empate");
+        }
+        else if (receivedChar == 'L') {
+            
+            webSocket.broadcastTXT("gano_jugador");
+        }
         // Si es un dígito del 1 al 9, lo reenvía directamente
         else if (receivedChar >= '0' && receivedChar <= '8') {
             String message(receivedChar);  // Convierte el char a String para broadcastTXT
@@ -164,6 +180,7 @@ void enviarJuego(char accion) {
 // Function to create and send a drawing command string with position on the board
 void enviarDibujoTablero(char figura, char posX, char posY) {
     String command = ".*JD" + String(figura) + String(posX) + String(posY) + "*.";
+    delay(50);
     mySerial.print(command);
 }
 
@@ -231,7 +248,8 @@ char reconocerFigura() {
     int counts[4] = {0}; // Counts for each figure (X, T, C, O)
     float precision[4] = {0.0}; // Sum of precision for each figure
 
-    for (int i = 0; i < 15; i++) {
+    digitalWrite(LED_PIN, HIGH); //Encender LED
+    for (int i = 0; i < 16; i++) {
         // instead of wait_ms, we'll wait on the signal, this allows threads to cancel us...
         if (ei_sleep(5) != EI_IMPULSE_OK) {
             return figuraDetectada;
@@ -252,6 +270,7 @@ char reconocerFigura() {
         if (ei_camera_capture((size_t)EI_CLASSIFIER_INPUT_WIDTH, (size_t)EI_CLASSIFIER_INPUT_HEIGHT, snapshot_buf) == false) {
             ei_printf("Failed to capture image\r\n");
             free(snapshot_buf);
+            digitalWrite(LED_PIN, LOW);
             return figuraDetectada;
         }
 
@@ -261,9 +280,15 @@ char reconocerFigura() {
         EI_IMPULSE_ERROR err = run_classifier(&signal, &result, debug_nn);
         if (err != EI_IMPULSE_OK) {
             ei_printf("ERR: Failed to run classifier (%d)\n", err);
+            digitalWrite(LED_PIN, LOW);
             return figuraDetectada;
         }
 
+        if (i == 0){
+          free(snapshot_buf);
+          continue;
+        }
+        
         // Print the bounding boxes for debugging
         ei_printf("Object detection bounding boxes:\r\n");
         if (result.bounding_boxes_count == 0) {
@@ -274,7 +299,7 @@ char reconocerFigura() {
             float max_value = 0.0;
             for (uint32_t j = 0; j < result.bounding_boxes_count; j++) {
                 ei_impulse_result_bounding_box_t bb = result.bounding_boxes[j];
-                if (bb.value == 0) {
+                if (bb.value <= 0.6) {
                     continue;
                 }
                 ei_printf("  %s (%f) [ x: %u, y: %u, width: %u, height: %u ]\r\n",
@@ -314,6 +339,8 @@ char reconocerFigura() {
         free(snapshot_buf);
     }
 
+    digitalWrite(LED_PIN, LOW); //Encender LED
+
     // Calculate the figure with the highest count and its average precision
     int max_count_index = -1;
     int max_count = 0;
@@ -349,7 +376,9 @@ char reconocerFigura() {
           webSocket.broadcastTXT("circulo");
        } else if (figuraDetectada == 'T'){
           webSocket.broadcastTXT("triangulo");
-       }
+       } else { 
+          webSocket.broadcastTXT("figura no reconocida");
+        }
     }
     return figuraDetectada;
 }

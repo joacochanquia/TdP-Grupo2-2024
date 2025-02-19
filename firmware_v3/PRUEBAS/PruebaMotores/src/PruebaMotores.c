@@ -533,9 +533,13 @@ void drawFigureVar( MotorPins_t motor1, MotorPins_t motor2, char c, int size ){
 
 // Funcion para mostrar una figura de tamaño variable
 void showFigureVar( MotorPins_t motor1, MotorPins_t motor2, char c, int size ){
-   moveTo( motor1, motor2, 0, -60 );
-   drawFigureVar(motor1, motor2, c, size);
-   moveTo( motor1, motor2, 0, 0 );
+   if ((c == 'C') || (c == 'O') || (c == 'X') || (c == 'T') || (c == 'S') || (c == 'H')) {
+      moveTo( motor1, motor2, 0, -60 );
+      drawFigureVar(motor1, motor2, c, size);
+      moveTo( motor1, motor2, 0, 0 );
+   } else {
+      showError();
+   }
 }
 
 // Funcion para dibujar una figura de tamaño estandar
