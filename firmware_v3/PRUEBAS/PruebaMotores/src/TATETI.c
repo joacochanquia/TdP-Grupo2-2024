@@ -180,6 +180,7 @@ char jugarTATETI(char played) {
                 }else{
                     nextMove = '5';
                 }
+            break;
             case '2':
                 if (moves[5] != '3'){
                     nextMove = '3';
@@ -243,6 +244,7 @@ char jugarTATETI(char played) {
                 }else{
                     nextMove = '8';
                 }
+            break;
             case '2':
                 if (moves[7] != '1'){
                     nextMove = '1';

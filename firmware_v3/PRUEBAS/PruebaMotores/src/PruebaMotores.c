@@ -732,6 +732,7 @@ void drawInBoard(MotorPins_t motor1, MotorPins_t motor2, char figure, int x, cha
 
 void modeTATETI(MotorPins_t motor1, MotorPins_t motor2, char * buffer, int bufferIndex){
    int i, posX, posY;
+   char played;
    switch (buffer[1])
    {
    case 'T':
@@ -739,37 +740,23 @@ void modeTATETI(MotorPins_t motor1, MotorPins_t motor2, char * buffer, int buffe
       drawBoard(motor1, motor2);
       delay(50);
       char firstMove = startGame();
-      //char firstMove = '4';
       getCoords(firstMove, &posX, &posY);
       drawInBoard(motor1, motor2, 'X', posX + '0', posY + '0');
-      //drawInBoard(motor1, motor2, 'X', '1', '1');
       uartWriteByte(UART_232, firstMove);
       break;
    case 'D':
-      //if (//el casillero no esta ocupado
-         drawInBoard(motor1, motor2, buffer[2], buffer[3], buffer[4]);
-         char played = (buffer[3] - '0' + (buffer[4] - '0') * 3) + '0';
-         char nextMove = jugarTATETI(played);
-         //nextMove = '5';
-         if ((nextMove !=  'F') && (nextMove >= '0' && nextMove <= '8')){ 
-            delay(50);
-            getCoords(nextMove, &posX, &posY);
-            /*
-            int move = nextMove - '0';
-            posX = move % 3;
-            posY = move / 3;
-            */
-            drawInBoard(motor1, motor2, 'X', posX + '0', posY + '0');
-         } else {
-            // No hay espacio en el tablero
-            showError();
-         }
-         uartWriteByte(UART_232, nextMove);
-         /*
-         }else{
-         // No es una X ni O o la casilla ya está ocupada
+      drawInBoard(motor1, motor2, buffer[2], buffer[3], buffer[4]);
+      played = (((buffer[3] - '0') + (buffer[4] - '0') * 3) + '0');
+      char nextMove = jugarTATETI(played);
+      if ((nextMove !=  'F') && (nextMove >= '0' && nextMove <= '8')){ 
+         delay(50);
+         getCoords(nextMove, &posX, &posY);
+         drawInBoard(motor1, motor2, 'X', posX + '0', posY + '0');
+      } else {
+         // No hay espacio en el tablero
          showError();
-      }*/
+      }
+      uartWriteByte(UART_232, nextMove);
       break;
    case 'L':
       moveTo(motor1, motor2, 0, 0);
