@@ -592,81 +592,6 @@ int moveInBoard( MotorPins_t motor1, MotorPins_t motor2, char x, char y){
    }
 }
 
-// Funcion para leer los botones y dibujar una figura
-void readTECdrawFigure( MotorPins_t motor1, MotorPins_t motor2 ){
-   if (!gpioRead( TEC1 )){
-      gpioWrite( LED1, ON );
-      showFigure(motor1, motor2, 'X');
-      gpioWrite( LED1, OFF );
-   }
-   if (!gpioRead( TEC2 )){
-      gpioWrite( LED2, ON );
-      showFigure(motor1, motor2, 'C');
-      gpioWrite( LED2, OFF );
-
-   }
-   if (!gpioRead( TEC3 )){
-      gpioWrite( LED3, ON );
-      showFigureVar(motor1, motor2, 'X', 100);
-      gpioWrite( LED3, OFF );
-   }
-   if (!gpioRead( TEC4 )){
-      gpioWrite( LEDR, ON );
-      gpioWrite( LEDG, ON );
-      showFigureVar(motor1, motor2, 'X', 120);
-      //drawBoard(motor1, motor2);
-      gpioWrite( LEDR, OFF );
-      gpioWrite( LEDG, OFF );
-   }
-}
-
-// Funcion para leer los botones y dibujar una figura
-void readTECdrawAngle( MotorPins_t motor1, MotorPins_t motor2 ){
-   if (!gpioRead( TEC1 )){
-      gpioWrite( LED1, ON );
-      moveTo( motor1, motor2, 0, -60 );
-      servoDown();
-      moveAngle(motor1, motor2, 0, 80, SPEED);
-      servoUp();
-      moveAngle(motor1, motor2, 180, 80, SPEED);
-      moveTo( motor1, motor2, 0, 0 );
-      gpioWrite( LED1, OFF );
-   }
-   if (!gpioRead( TEC2 )){
-      gpioWrite( LED2, ON );
-      moveTo( motor1, motor2, 0, -60 );
-      servoDown();
-      moveAngle(motor1, motor2, 45, 80, SPEED);
-      servoUp();
-      moveAngle(motor1, motor2, 225, 80, SPEED);
-      moveTo( motor1, motor2, 0, 0 );
-      gpioWrite( LED2, OFF );
-
-   }
-   if (!gpioRead( TEC3 )){
-      gpioWrite( LED3, ON );
-      moveTo( motor1, motor2, 0, -60 );
-      servoDown();
-      moveAngle(motor1, motor2, 60, 80, SPEED);
-      servoUp();
-      moveAngle(motor1, motor2, 240, 80, SPEED);
-      moveTo( motor1, motor2, 0, 0 );
-      gpioWrite( LED3, OFF );
-   }
-   if (!gpioRead( TEC4 )){
-      gpioWrite( LEDR, ON );
-      gpioWrite( LEDG, ON );
-      moveTo( motor1, motor2, 0, -60 );
-      servoDown();
-      moveAngle(motor1, motor2, 120, 80, SPEED);
-      servoUp();
-      moveAngle(motor1, motor2, 300, 80, SPEED);
-      moveTo( motor1, motor2, 0, 0 );
-      gpioWrite( LEDR, OFF );
-      gpioWrite( LEDG, OFF );
-   }
-}
-
 void conectAPPold(MotorPins_t motor1, MotorPins_t motor2){
    char receivedChar;
    if (uartReadByte(UART_232, (uint8_t*)&receivedChar)) {
@@ -734,6 +659,29 @@ void drawInBoard(MotorPins_t motor1, MotorPins_t motor2, char figure, int x, cha
    }
 }
 
+int sendWinner(){
+   char winner = checkWin();
+   switch (winner)
+   {
+   case 'O':
+      uartWriteByte(UART_232, 'L');
+      return 1;
+      break;
+   case 'X':
+      uartWriteByte(UART_232, 'W');
+      return 1;
+      break;
+   case 'T':
+      uartWriteByte(UART_232, 'T');
+      return 1;
+      break;
+   default:
+      showError();
+      return 0;
+      break;
+   }
+}
+
 void modeTATETI(MotorPins_t motor1, MotorPins_t motor2, char * buffer, int bufferIndex){
    int i, posX, posY;
    char played;
@@ -750,6 +698,20 @@ void modeTATETI(MotorPins_t motor1, MotorPins_t motor2, char * buffer, int buffe
       break;
    case 'D':
       drawInBoard(motor1, motor2, buffer[2], buffer[3], buffer[4]);
+      played = (((buffer[3] - '0') + (buffer[4] - '0') * 3) + '0');
+      char nextMove = jugarTATETI(played);
+      if ((nextMove !=  'F') && (nextMove >= '0' && nextMove <= '8')){ 
+         delay(50);
+         getCoords(nextMove, &posX, &posY);
+         drawInBoard(motor1, motor2, 'X', posX + '0', posY + '0');
+      } else {
+         // No hay espacio en el tablero
+         showError();
+      }
+      uartWriteByte(UART_232, nextMove);
+      sendWinner();
+      break;
+   case 'P':
       played = (((buffer[3] - '0') + (buffer[4] - '0') * 3) + '0');
       char nextMove = jugarTATETI(played);
       if ((nextMove !=  'F') && (nextMove >= '0' && nextMove <= '8')){ 
@@ -844,6 +806,81 @@ void conectAPP(MotorPins_t motor1, MotorPins_t motor2) {
    }
 }
 
+// Funcion para leer los botones y dibujar una figura
+void readTECdrawFigure( MotorPins_t motor1, MotorPins_t motor2 ){
+   if (!gpioRead( TEC1 )){
+      gpioWrite( LED1, ON );
+      showFigure(motor1, motor2, 'X');
+      gpioWrite( LED1, OFF );
+   }
+   if (!gpioRead( TEC2 )){
+      gpioWrite( LED2, ON );
+      showFigure(motor1, motor2, 'C');
+      gpioWrite( LED2, OFF );
+
+   }
+   if (!gpioRead( TEC3 )){
+      gpioWrite( LED3, ON );
+      showFigureVar(motor1, motor2, 'X', 100);
+      gpioWrite( LED3, OFF );
+   }
+   if (!gpioRead( TEC4 )){
+      gpioWrite( LEDR, ON );
+      gpioWrite( LEDG, ON );
+      showFigureVar(motor1, motor2, 'X', 120);
+      //drawBoard(motor1, motor2);
+      gpioWrite( LEDR, OFF );
+      gpioWrite( LEDG, OFF );
+   }
+}
+
+// Funcion para leer los botones y dibujar una figura
+void readTECdrawAngle( MotorPins_t motor1, MotorPins_t motor2 ){
+   if (!gpioRead( TEC1 )){
+      gpioWrite( LED1, ON );
+      moveTo( motor1, motor2, 0, -60 );
+      servoDown();
+      moveAngle(motor1, motor2, 0, 80, SPEED);
+      servoUp();
+      moveAngle(motor1, motor2, 180, 80, SPEED);
+      moveTo( motor1, motor2, 0, 0 );
+      gpioWrite( LED1, OFF );
+   }
+   if (!gpioRead( TEC2 )){
+      gpioWrite( LED2, ON );
+      moveTo( motor1, motor2, 0, -60 );
+      servoDown();
+      moveAngle(motor1, motor2, 45, 80, SPEED);
+      servoUp();
+      moveAngle(motor1, motor2, 225, 80, SPEED);
+      moveTo( motor1, motor2, 0, 0 );
+      gpioWrite( LED2, OFF );
+
+   }
+   if (!gpioRead( TEC3 )){
+      gpioWrite( LED3, ON );
+      moveTo( motor1, motor2, 0, -60 );
+      servoDown();
+      moveAngle(motor1, motor2, 60, 80, SPEED);
+      servoUp();
+      moveAngle(motor1, motor2, 240, 80, SPEED);
+      moveTo( motor1, motor2, 0, 0 );
+      gpioWrite( LED3, OFF );
+   }
+   if (!gpioRead( TEC4 )){
+      gpioWrite( LEDR, ON );
+      gpioWrite( LEDG, ON );
+      moveTo( motor1, motor2, 0, -60 );
+      servoDown();
+      moveAngle(motor1, motor2, 120, 80, SPEED);
+      servoUp();
+      moveAngle(motor1, motor2, 300, 80, SPEED);
+      moveTo( motor1, motor2, 0, 0 );
+      gpioWrite( LEDR, OFF );
+      gpioWrite( LEDG, OFF );
+   }
+}
+
 void readTECandTATETI(MotorPins_t motor1, MotorPins_t motor2){
    if (!gpioRead( TEC1 )){
       gpioWrite( LED1, ON );
@@ -873,6 +910,25 @@ void readTECandTATETI(MotorPins_t motor1, MotorPins_t motor2){
    }
 }
 
+void readTECandMove( MotorPins_t motor1, MotorPins_t motor2){
+   if (!gpioRead( TEC1 )){
+      moveX(motor1, motor2, LEFT, 50, SPEED);
+      delay(100);
+   }
+   if (!gpioRead( TEC2 )){
+      moveY(motor1, motor2, UP, 50, SPEED);
+      delay(100);
+   }
+   if (!gpioRead( TEC3 )){
+      moveY(motor1, motor2, DOWN, 50, SPEED);
+      delay(100);
+   }
+   if (!gpioRead( TEC4 )){
+      moveX(motor1, motor2, RIGHT, 50, SPEED);
+      delay(100);
+   }
+}
+
 // Funcion principal del programa
 int main(void) {
    boardConfig();
@@ -893,6 +949,7 @@ int main(void) {
       delay(200);
      
       conectAPP( motor1, motor2 );
+      readTECandMove( motor1, motor2 );
       //readTECdrawFigure( motor1, motor2 );
       //readTECandTATETI( motor1, motor2 );
       //readTECdrawAngle( motor1, motor2 );

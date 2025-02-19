@@ -9,7 +9,7 @@ extern char moves[10];
 
 void cleanBoard();
 void printBoard(char board[SIZE][SIZE]);
-char checkWin(char board[SIZE][SIZE]);
+char checkWin();
 void setMove(char move, char player);
 char startGame();
 char jugarTATETIrandom(char played);

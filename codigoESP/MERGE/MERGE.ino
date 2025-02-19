@@ -184,6 +184,13 @@ void enviarDibujoTablero(char figura, char posX, char posY) {
     mySerial.print(command);
 }
 
+// Function to create and send a drawing command string with position on the board
+void enviarJugada(char figura, char posX, char posY) {
+    String command = ".*JP" + String(figura) + String(posX) + String(posY) + "*.";
+    delay(50);
+    mySerial.print(command);
+}
+
 /**
  * @brief      WebSocket event handler
  */
@@ -248,8 +255,9 @@ char reconocerFigura() {
     int counts[4] = {0}; // Counts for each figure (X, T, C, O)
     float precision[4] = {0.0}; // Sum of precision for each figure
 
-    digitalWrite(LED_PIN, HIGH); //Encender LED
-    for (int i = 0; i < 16; i++) {
+    digitalWrite(LED_PIN, HIGH);
+
+    for (int i = 0; i < 15; i++) {
         // instead of wait_ms, we'll wait on the signal, this allows threads to cancel us...
         if (ei_sleep(5) != EI_IMPULSE_OK) {
             return figuraDetectada;
@@ -260,6 +268,7 @@ char reconocerFigura() {
         // check if allocation was successful
         if (snapshot_buf == nullptr) {
             ei_printf("ERR: Failed to allocate snapshot buffer!\n");
+            digitalWrite(LED_PIN, LOW);
             return figuraDetectada;
         }
 
@@ -284,11 +293,11 @@ char reconocerFigura() {
             return figuraDetectada;
         }
 
-        if (i == 0){
+        if( i == 0){
           free(snapshot_buf);
           continue;
         }
-        
+
         // Print the bounding boxes for debugging
         ei_printf("Object detection bounding boxes:\r\n");
         if (result.bounding_boxes_count == 0) {
@@ -339,8 +348,7 @@ char reconocerFigura() {
         free(snapshot_buf);
     }
 
-    digitalWrite(LED_PIN, LOW); //Encender LED
-
+    digitalWrite(LED_PIN, LOW);
     // Calculate the figure with the highest count and its average precision
     int max_count_index = -1;
     int max_count = 0;
@@ -380,6 +388,7 @@ char reconocerFigura() {
           webSocket.broadcastTXT("figura no reconocida");
         }
     }
+
     return figuraDetectada;
 }
 
