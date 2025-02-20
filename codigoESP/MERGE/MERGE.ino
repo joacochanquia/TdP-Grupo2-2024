@@ -5,10 +5,10 @@
 #include "edge-impulse-sdk/dsp/image/image.hpp"
 #include "esp_camera.h"
 
-const char* ssid = "JOMAPE 2.4GHz";         // Cambia por el nombre de tu red WiFi
-const char* password = "bebe9bebe9";  // Cambia por la contraseña de tu WiFi
-IPAddress local_IP(192, 168, 0, 31);     // IP fija que quieras usar
-IPAddress gateway(192, 168, 0, 1);       // Gateway de tu router
+const char* ssid = "Trabajo Final";         // Cambia por el nombre de tu red WiFi
+const char* password = "ilcapogutierrez";  // Cambia por la contraseña de tu WiFi
+IPAddress local_IP(10, 0, 3, 179);     // IP fija que quieras usar
+IPAddress gateway(10, 0, 3, 1);       // Gateway de tu router
 IPAddress subnet(255, 255, 255, 0);    // Máscara de subred
 
 // Configuración de UART

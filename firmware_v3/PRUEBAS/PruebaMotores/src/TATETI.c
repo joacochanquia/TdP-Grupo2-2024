@@ -42,7 +42,7 @@ char checkWin() {
     }
     if (board[0][0] == board[1][1] && board[1][1] == board[2][2] && board[0][0] != 'E') return board[0][0];
     if (board[0][2] == board[1][1] && board[1][1] == board[2][0] && board[0][2] != 'E') return board[0][2];
-    if (turn == 8) return 'T';
+    if (turn >= 8) return 'T';
     return 0;
 }
 

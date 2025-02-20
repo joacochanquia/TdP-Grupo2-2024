@@ -442,7 +442,7 @@
     
         function connectWebSocket() {
            // socket = new WebSocket('ws://10.0.22.73:81'); // Cambia XX por la IP de tu ESP32
-            socket = new WebSocket('ws://192.168.0.31:81');
+            socket = new WebSocket('ws://10.0.3.179:81');
             socket.onopen = () => {
                 console.log('Conectado al WebSocket');
                 document.getElementById('connection-status').textContent = 'Conectado';

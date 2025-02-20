@@ -29,6 +29,14 @@
 #define RIGHT true  // Movimiento hacia la derecha
 #define LEFT false  // Movimiento hacia la izquierda
 
+// Definir tamanio estandar de figuras
+#define SQUARE_SIZE 100  // Tamaño de un cuadrado
+#define X_SIZE 100  // Tamaño de una X
+#define TRIANGLE_SIZE 120  // Tamaño de un triángulo
+#define CIRCLE_SIZE 80  // Tamaño de un círculo
+#define STAR_SIZE 120  // Tamaño de una estrella
+#define HEART_SIZE 100  // Tamaño de un corazón
+
 // Definir pines y posiciones para el servo
 #define SERVO_N SERVO3  // Pin del servo
 #define SERVO_UP 60  // Posición del servo hacia arriba
@@ -423,12 +431,41 @@ void showFigureVar( MotorPins_t motor1, MotorPins_t motor2, char c, int size ){
 
 // Funcion para dibujar una figura de tamaño estandar
 void drawFigure( MotorPins_t motor1, MotorPins_t motor2, char c ){
-   drawFigureVar(motor1, motor2, c, 80);
+   switch(c)
+   {
+   case 'C':
+      drawSquare(motor1, motor2, SQUARE_SIZE, SPEED);
+      break;
+   case 'O':
+      drawCircle(motor1, motor2, CIRCLE_SIZE, SPEED);
+      break;
+   case 'X':
+      drawX(motor1, motor2, X_SIZE, SPEED);
+      break;
+   case 'T':
+      drawTriangle(motor1, motor2, TRIANGLE_SIZE, SPEED);
+      break;
+   case 'S':
+      drawStar(motor1, motor2, STAR_SIZE, SPEED);
+      break;
+   case 'H':
+      drawHeart(motor1, motor2, HEART_SIZE, SPEED);
+      break;
+   default :
+      showError();
+      break;
+   }
 }
 
 // Funcion para dibujar una figura de tamaño estandar y mostrarla
 void showFigure( MotorPins_t motor1, MotorPins_t motor2, char c ){
-   showFigureVar(motor1, motor2, c, 80);
+   if ((c == 'C') || (c == 'O') || (c == 'X') || (c == 'T') || (c == 'S') || (c == 'H')) {
+      moveTo( motor1, motor2, 0, -60 );
+      drawFigure(motor1, motor2, c);
+      moveTo( motor1, motor2, 0, 0 );
+   } else {
+      showError();
+   }
 }
 
 // Funcion para dibujar un tablero de TA-TE-TI
@@ -734,20 +771,20 @@ void readTECandTATETI(MotorPins_t motor1, MotorPins_t motor2){
 }
 
 void readTECandMove( MotorPins_t motor1, MotorPins_t motor2){
-   if (!gpioRead( TEC1 )){
-      moveX(motor1, motor2, LEFT, 50, SPEED);
+   while (!gpioRead( TEC1 )){
+      moveX(motor1, motor2, LEFT, 10, SPEED);
       delay(100);
    }
-   if (!gpioRead( TEC2 )){
-      moveY(motor1, motor2, UP, 50, SPEED);
+   while (!gpioRead( TEC2 )){
+      moveY(motor1, motor2, UP, 10, SPEED);
       delay(100);
    }
-   if (!gpioRead( TEC3 )){
-      moveY(motor1, motor2, DOWN, 50, SPEED);
+   while (!gpioRead( TEC3 )){
+      moveY(motor1, motor2, DOWN, 10, SPEED);
       delay(100);
    }
-   if (!gpioRead( TEC4 )){
-      moveX(motor1, motor2, RIGHT, 50, SPEED);
+   while (!gpioRead( TEC4 )){
+      moveX(motor1, motor2, RIGHT, 10, SPEED);
       delay(100);
    }
 }
