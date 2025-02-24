@@ -17,3 +17,6 @@ Este proyecto consiste en un robot capaz de dibujar figuras en una hoja de papel
 - Machine Learning: Edge Impulse para el reconocimiento de figuras.
 
 Este proyecto fue desarrollado por el Grupo 2 en el marco de la materia Taller de Proyecto I en la Facultad de Ingeniería de la UNLP.
+- Joaquín Chanquía
+- Gabriel Ollier
+- Melina Caciani Toniolo
